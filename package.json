@@ -15,6 +15,7 @@
     "@fontsource-variable/hanken-grotesk": "^5.2.8",
     "@fontsource-variable/jetbrains-mono": "^5.2.8",
     "@phosphor-icons/react": "^2.1.10",
+    "@supabase/supabase-js": "^2.106.2",
     "html-to-image": "^1.11.13",
     "pg": "^8.21.0",
     "react": "^19.2.6",

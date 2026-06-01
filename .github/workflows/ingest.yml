@@ -1,0 +1,28 @@
+name: ingest-trending
+
+# 定时抓取 GitHub trending 并写入 Supabase（每天的快照 = 历史归档）。
+on:
+  schedule:
+    - cron: '0 */6 * * *' # 每 6 小时（UTC）
+  workflow_dispatch: {} # 也可在 Actions 页手动触发
+
+concurrency:
+  group: ingest
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      # 首次/幂等建表（已存在则无操作）
+      - run: npm run db:push
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      - run: npm run ingest
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}

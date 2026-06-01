@@ -41,7 +41,20 @@ create table if not exists public.rankings (
 create index if not exists rankings_by_rank
   on public.rankings (snapshot_id, rank);
 
--- RLS：开启但不加公开策略 —— 仅 service_role 可读写。
+-- RLS：开启。写入走直连 Postgres（绕过 RLS）；读取允许 anon（前端直读）。
 alter table public.repos     enable row level security;
 alter table public.snapshots enable row level security;
 alter table public.rankings  enable row level security;
+
+-- 公开只读：trending 是公开数据，允许浏览器用 publishable key 读这三张表。
+grant usage on schema public to anon;
+grant select on public.repos, public.snapshots, public.rankings to anon;
+
+drop policy if exists "anon read repos" on public.repos;
+create policy "anon read repos" on public.repos for select to anon using (true);
+
+drop policy if exists "anon read snapshots" on public.snapshots;
+create policy "anon read snapshots" on public.snapshots for select to anon using (true);
+
+drop policy if exists "anon read rankings" on public.rankings;
+create policy "anon read rankings" on public.rankings for select to anon using (true);
