@@ -1,8 +1,8 @@
 import { scrapeTrending } from './scrapeTrending.js'
-import { supabase } from './supabase.js'
+import { pool, hasDb } from './db.js'
 
 /**
- * Scrape one (period, language) and persist as a snapshot:
+ * Scrape one (period, language) and persist as a snapshot, in one transaction:
  *  - upsert repos (dedup by full_name)
  *  - upsert today's snapshot row
  *  - replace that snapshot's rankings
@@ -10,52 +10,58 @@ import { supabase } from './supabase.js'
  */
 export async function ingestTrending(since = 'daily', language = '') {
   const scraped = await scrapeTrending(since, language)
-  if (!supabase || scraped.length === 0) return scraped
+  if (!hasDb || scraped.length === 0) return scraped
 
-  // 1. upsert repos, get id per full_name
-  const repoRows = scraped.map((r) => ({
-    full_name: r.fullName,
-    owner: r.owner,
-    name: r.name,
-    url: r.url,
-    description: r.description,
-    language: r.language,
-    language_color: r.languageColor,
-    updated_at: new Date().toISOString(),
-  }))
-  const { data: repos, error: repoErr } = await supabase
-    .from('repos')
-    .upsert(repoRows, { onConflict: 'full_name' })
-    .select('id, full_name')
-  if (repoErr) throw repoErr
-  const idByName = new Map(repos.map((r) => [r.full_name, r.id]))
+  const client = await pool.connect()
+  try {
+    await client.query('begin')
 
-  // 2. upsert today's snapshot (refreshes captured_at if re-run same day)
-  const captured_date = new Date().toISOString().slice(0, 10)
-  const { data: snap, error: snapErr } = await supabase
-    .from('snapshots')
-    .upsert(
-      { captured_date, period: since, lang_filter: language, captured_at: new Date().toISOString() },
-      { onConflict: 'captured_date,period,lang_filter' },
+    // 1. upsert repos, collect id per full_name
+    const idByName = new Map()
+    for (const r of scraped) {
+      const { rows } = await client.query(
+        `insert into repos (full_name, owner, name, url, description, language, language_color, updated_at)
+         values ($1,$2,$3,$4,$5,$6,$7, now())
+         on conflict (full_name) do update set
+           owner = excluded.owner, name = excluded.name, url = excluded.url,
+           description = excluded.description, language = excluded.language,
+           language_color = excluded.language_color, updated_at = now()
+         returning id, full_name`,
+        [r.fullName, r.owner, r.name, r.url, r.description, r.language, r.languageColor],
+      )
+      idByName.set(rows[0].full_name, rows[0].id)
+    }
+
+    // 2. upsert today's snapshot (refreshes captured_at if re-run same day)
+    const capturedDate = new Date().toISOString().slice(0, 10)
+    const { rows: snapRows } = await client.query(
+      `insert into snapshots (captured_date, period, lang_filter, captured_at)
+       values ($1,$2,$3, now())
+       on conflict (captured_date, period, lang_filter) do update set captured_at = now()
+       returning id`,
+      [capturedDate, since, language],
     )
-    .select('id')
-    .single()
-  if (snapErr) throw snapErr
+    const snapshotId = snapRows[0].id
 
-  // 3. replace rankings for this snapshot
-  await supabase.from('rankings').delete().eq('snapshot_id', snap.id)
-  const rankingRows = scraped
-    .map((r) => ({
-      snapshot_id: snap.id,
-      repo_id: idByName.get(r.fullName),
-      rank: r.rank,
-      stars: r.stars,
-      forks: r.forks,
-      period_stars: r.periodStars,
-    }))
-    .filter((r) => r.repo_id)
-  const { error: rankErr } = await supabase.from('rankings').insert(rankingRows)
-  if (rankErr) throw rankErr
+    // 3. replace rankings for this snapshot
+    await client.query('delete from rankings where snapshot_id = $1', [snapshotId])
+    for (const r of scraped) {
+      const repoId = idByName.get(r.fullName)
+      if (!repoId) continue
+      await client.query(
+        `insert into rankings (snapshot_id, repo_id, rank, stars, forks, period_stars)
+         values ($1,$2,$3,$4,$5,$6)`,
+        [snapshotId, repoId, r.rank, r.stars, r.forks, r.periodStars],
+      )
+    }
+
+    await client.query('commit')
+  } catch (e) {
+    await client.query('rollback')
+    throw e
+  } finally {
+    client.release()
+  }
 
   return scraped
 }
