@@ -190,14 +190,16 @@ export default function App() {
         <header className="rise">
           <div className="flex flex-wrap items-end justify-between gap-5">
             <div>
-              <div className="font-mono text-[11px] uppercase tracking-[0.35em] text-vermilion">
-                {t('kicker')}
+              <div className="flex items-baseline gap-2.5 font-mono uppercase">
+                <span className="text-sm font-bold tracking-[0.42em] text-vermilion">GitHub</span>
+                <span className="text-muted/50">·</span>
+                <span className="text-[11px] tracking-[0.28em] text-muted">{t('kicker')}</span>
               </div>
-              <h1 className="mt-2 font-display text-5xl font-black leading-[0.95] tracking-tight text-ink sm:text-7xl">
-                GitHub{' '}
-                <span className="italic font-light" style={{ fontVariationSettings: '"SOFT" 60, "WONK" 1' }}>
-                  Trending
-                </span>
+              <h1
+                className="-mt-1 font-display text-7xl font-light italic leading-[0.9] tracking-tight text-ink sm:text-8xl"
+                style={{ fontVariationSettings: '"opsz" 144, "SOFT" 50, "WONK" 1' }}
+              >
+                Trending
               </h1>
             </div>
             <div className="flex items-center gap-2.5 pb-1">
