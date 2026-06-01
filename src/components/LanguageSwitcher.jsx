@@ -22,7 +22,7 @@ export default function LanguageSwitcher() {
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
+        className="flex items-center gap-1.5 rounded-sm border border-ink/20 bg-transparent px-3 py-2 text-sm font-medium text-ink-soft transition hover:border-ink/40 hover:bg-paper-2"
       >
         <Translate size={16} weight="bold" />
         <span>{current?.label}</span>
@@ -30,7 +30,7 @@ export default function LanguageSwitcher() {
       </button>
 
       {open && (
-        <div className="absolute right-0 z-20 mt-1.5 w-36 overflow-hidden rounded-xl border border-slate-100 bg-white py-1 shadow-lg">
+        <div className="absolute right-0 z-20 mt-1.5 w-36 overflow-hidden rounded-sm border border-line bg-paper py-1 shadow-xl">
           {LANG_OPTIONS.map((o) => (
             <button
               key={o.value}
@@ -38,12 +38,12 @@ export default function LanguageSwitcher() {
                 setLang(o.value)
                 setOpen(false)
               }}
-              className={`flex w-full items-center justify-between px-3.5 py-2 text-sm transition hover:bg-slate-50 ${
-                o.value === lang ? 'font-semibold text-slate-900' : 'text-slate-600'
+              className={`flex w-full items-center justify-between px-3.5 py-2 text-sm transition hover:bg-paper-2 ${
+                o.value === lang ? 'font-semibold text-ink' : 'text-muted'
               }`}
             >
               {o.label}
-              {o.value === lang && <Check size={15} weight="bold" className="text-emerald-500" />}
+              {o.value === lang && <Check size={15} weight="bold" className="text-vermilion" />}
             </button>
           ))}
         </div>

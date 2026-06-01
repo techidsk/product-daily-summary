@@ -1,11 +1,28 @@
 @import 'tailwindcss';
 
 @theme {
-  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+  /* Editorial type system: serif display + warm grotesk body + mono code.
+     Each falls back to elegant CJK faces so zh/ja stay on-aesthetic. */
+  --font-display: 'Fraunces Variable', 'Songti SC', 'Noto Serif SC',
+    'Noto Serif JP', 'Yu Mincho', 'Hiragino Mincho ProN', 'Source Han Serif SC',
+    serif;
+  --font-sans: 'Hanken Grotesk Variable', ui-sans-serif, system-ui,
     'PingFang SC', 'Hiragino Sans', 'Microsoft YaHei', 'Yu Gothic', Meiryo,
     'Noto Sans CJK SC', sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', Menlo,
     Consolas, 'Liberation Mono', monospace;
+
+  /* Paper-and-ink palette */
+  --color-paper: #f7f3ea;
+  --color-paper-2: #f1ebdd;
+  --color-ink: #211c15;
+  --color-ink-soft: #4a4234;
+  --color-muted: #897e69;
+  --color-line: #ddd3c0;
+  --color-line-soft: #e8e0d0;
+  --color-vermilion: #bf3b2b;
+  --color-vermilion-deep: #9a2f22;
+  --color-leaf: #4d7c2f;
 }
 
 :root {
@@ -14,7 +31,36 @@
 
 body {
   margin: 0;
+  background-color: var(--color-paper);
+  color: var(--color-ink);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+}
+
+/* Subtle paper grain — fixed, very low opacity, never touches text crispness. */
+.grain::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+}
+
+/* Staggered masthead + feed reveal on load */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.rise {
+  animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }

@@ -11,6 +11,8 @@ export const LANG_OPTIONS = [
 const translations = {
   zh: {
     subtitle: '每日 / 每周 / 每月 热门项目汇总',
+    kicker: '开 源 精 选 · 每 日 出 版',
+    adLabel: '赞助',
     share: '分享卡片',
     periodDaily: '每日',
     periodWeekly: '每周',
@@ -32,6 +34,8 @@ const translations = {
   },
   en: {
     subtitle: 'Daily / Weekly / Monthly trending digest',
+    kicker: 'OPEN SOURCE · PUBLISHED DAILY',
+    adLabel: 'Sponsored',
     share: 'Share card',
     periodDaily: 'Daily',
     periodWeekly: 'Weekly',
@@ -53,6 +57,8 @@ const translations = {
   },
   ja: {
     subtitle: '毎日・毎週・毎月のトレンドまとめ',
+    kicker: 'オープンソース · 毎日発行',
+    adLabel: 'スポンサー',
     share: 'シェアカード',
     periodDaily: '毎日',
     periodWeekly: '毎週',
