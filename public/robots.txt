@@ -1,0 +1,12 @@
+# https://your-domain.com  — replace with your real domain below
+User-agent: *
+Allow: /
+
+# Allow Google's ad/crawl bots explicitly (helps AdSense review)
+User-agent: Mediapartners-Google
+Allow: /
+
+User-agent: AdsBot-Google
+Allow: /
+
+Sitemap: https://your-domain.com/sitemap.xml

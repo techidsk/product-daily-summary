@@ -13,6 +13,7 @@ import { useI18n } from './i18n.jsx'
 import ShareCard from './components/ShareCard.jsx'
 import LanguageSwitcher from './components/LanguageSwitcher.jsx'
 import AdSlot from './components/AdSlot.jsx'
+import Calendar from './components/Calendar.jsx'
 
 const PERIODS = [
   { key: 'daily', tk: 'periodDaily' },
@@ -261,21 +262,12 @@ export default function App() {
 
               <div className="flex items-center gap-3">
                 {dates.length > 0 && (
-                  <select
-                    value={archiveDate}
-                    onChange={(e) => setArchiveDate(e.target.value)}
-                    title={t('archivePrefix')}
-                    className={`cursor-pointer border-b bg-transparent py-1 pr-6 font-mono text-xs uppercase tracking-wider focus:border-vermilion focus:outline-none ${
-                      archiveDate ? 'border-vermilion text-vermilion' : 'border-ink/30 text-ink-soft'
-                    }`}
-                  >
-                    <option value="">◷ {t('archiveLatest')}</option>
-                    {dates.map((d) => (
-                      <option key={d} value={d}>
-                        {d}
-                      </option>
-                    ))}
-                  </select>
+                  <Calendar
+                    availableDates={dates}
+                    selected={archiveDate}
+                    onSelect={setArchiveDate}
+                    onClear={() => setArchiveDate('')}
+                  />
                 )}
                 <select
                   value={language}
@@ -342,7 +334,45 @@ export default function App() {
           </aside>
         </div>
 
+        {/* ───────────────── Editorial content (SEO + readers) ───────────────── */}
+        <section className="mt-16 grid gap-10 border-t border-line pt-10 md:grid-cols-2">
+          <div>
+            <h2 className="font-display text-2xl font-semibold tracking-tight text-ink">
+              {t('introHeading')}
+            </h2>
+            <p className="mt-3 max-w-prose text-sm leading-relaxed text-ink-soft">
+              {t('introBody')}
+            </p>
+          </div>
+          <div>
+            <h2 className="font-display text-2xl font-semibold tracking-tight text-ink">
+              {t('faqHeading')}
+            </h2>
+            <dl className="mt-3 space-y-4">
+              {[1, 2, 3].map((i) => (
+                <div key={i}>
+                  <dt className="text-sm font-semibold text-ink">{t(`faqQ${i}`)}</dt>
+                  <dd className="mt-1 max-w-prose text-sm leading-relaxed text-ink-soft">
+                    {t(`faqA${i}`)}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </section>
+
         <footer className="mt-14 border-t border-line pt-4 text-center font-mono text-[11px] uppercase tracking-widest text-muted">
+          <nav className="mb-3 flex flex-wrap items-center justify-center gap-x-5 gap-y-1">
+            <a href="/about.html" className="transition hover:text-vermilion">
+              {t('navAbout')}
+            </a>
+            <a href="/privacy.html" className="transition hover:text-vermilion">
+              {t('navPrivacy')}
+            </a>
+            <a href="/contact.html" className="transition hover:text-vermilion">
+              {t('navContact')}
+            </a>
+          </nav>
           {t('footer')}
         </footer>
       </div>

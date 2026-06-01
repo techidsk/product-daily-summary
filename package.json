@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node server/prerender.js",
     "preview": "vite preview",
     "db:push": "node --env-file-if-exists=.env server/db-push.js",
-    "ingest": "node --env-file-if-exists=.env server/ingest-all.js"
+    "ingest": "node --env-file-if-exists=.env server/ingest-all.js",
+    "backfill": "node --env-file-if-exists=.env server/backfill.js"
   },
   "dependencies": {
     "@fontsource-variable/fraunces": "^5.2.9",

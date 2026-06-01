@@ -1,0 +1,4 @@
+# ads.txt — required by Google AdSense once your account is approved.
+# Replace pub-XXXXXXXXXXXXXXXX with your AdSense publisher ID (Account → Settings),
+# then uncomment the line below. Until then this file is harmless.
+# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0

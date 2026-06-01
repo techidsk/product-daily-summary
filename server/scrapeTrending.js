@@ -2,8 +2,8 @@ import * as cheerio from 'cheerio'
 
 const SINCE = new Set(['daily', 'weekly', 'monthly'])
 
-// GitHub occasionally drops a connection ("fetch failed"); retry briefly.
-async function fetchHtml(url, attempts = 3) {
+// GitHub (and archive.org) occasionally drop a connection ("fetch failed"); retry briefly.
+export async function fetchHtml(url, attempts = 3) {
   let lastErr
   for (let i = 0; i < attempts; i++) {
     try {
@@ -13,9 +13,9 @@ async function fetchHtml(url, attempts = 3) {
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
           Accept: 'text/html',
         },
-        signal: AbortSignal.timeout(15000), // never hang forever on a stalled request
+        signal: AbortSignal.timeout(20000), // never hang forever on a stalled request
       })
-      if (!res.ok) throw new Error(`GitHub responded ${res.status}`)
+      if (!res.ok) throw new Error(`responded ${res.status}`)
       return await res.text()
     } catch (e) {
       lastErr = e
@@ -32,16 +32,11 @@ function parseCount(text) {
 }
 
 /**
- * Scrape github.com/trending on the server (no CORS, real data).
- * @param {'daily'|'weekly'|'monthly'} since
- * @param {string} language e.g. 'javascript' (empty = all)
+ * Parse a github.com/trending HTML document into ranked repos.
+ * Works for both live pages and archived (Wayback) copies — same markup.
+ * @param {string} html
  */
-export async function scrapeTrending(since = 'daily', language = '') {
-  if (!SINCE.has(since)) since = 'daily'
-  const path = language ? `/trending/${encodeURIComponent(language)}` : '/trending'
-  const url = `https://github.com${path}?since=${since}`
-
-  const html = await fetchHtml(url)
+export function parseTrendingHtml(html) {
   const $ = cheerio.load(html)
   const repos = []
 
@@ -64,7 +59,7 @@ export async function scrapeTrending(since = 'daily', language = '') {
       owner,
       name,
       fullName: `${owner}/${name}`,
-      url: `https://github.com${href}`,
+      url: `https://github.com/${owner}/${name}`,
       description,
       language: language || null,
       languageColor,
@@ -75,4 +70,21 @@ export async function scrapeTrending(since = 'daily', language = '') {
   })
 
   return repos
+}
+
+/** Build the github.com/trending URL for a (since, language) pair. */
+export function trendingUrl(since = 'daily', language = '') {
+  if (!SINCE.has(since)) since = 'daily'
+  const path = language ? `/trending/${encodeURIComponent(language)}` : '/trending'
+  return `https://github.com${path}?since=${since}`
+}
+
+/**
+ * Scrape github.com/trending on the server (no CORS, real data).
+ * @param {'daily'|'weekly'|'monthly'} since
+ * @param {string} language e.g. 'javascript' (empty = all)
+ */
+export async function scrapeTrending(since = 'daily', language = '') {
+  const html = await fetchHtml(trendingUrl(since, language))
+  return parseTrendingHtml(html)
 }
