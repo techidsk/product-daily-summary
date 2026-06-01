@@ -13,6 +13,7 @@ async function fetchHtml(url, attempts = 3) {
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
           Accept: 'text/html',
         },
+        signal: AbortSignal.timeout(15000), // never hang forever on a stalled request
       })
       if (!res.ok) throw new Error(`GitHub responded ${res.status}`)
       return await res.text()
