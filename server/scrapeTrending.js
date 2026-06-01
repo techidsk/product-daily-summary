@@ -19,7 +19,7 @@ async function fetchHtml(url, attempts = 3) {
       return await res.text()
     } catch (e) {
       lastErr = e
-      if (i < attempts - 1) await new Promise((r) => setTimeout(r, 400 * (i + 1)))
+      if (i < attempts - 1) await new Promise((r) => setTimeout(r, 1000 * (i + 1)))
     }
   }
   throw lastErr
