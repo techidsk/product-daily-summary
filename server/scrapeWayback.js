@@ -1,4 +1,4 @@
-import { fetchHtml, parseTrendingHtml, trendingUrl } from './scrapeTrending.js'
+import { fetchHtml, parseTrendingHtml } from './scrapeTrending.js'
 
 // Historical backfill source: the Internet Archive (archive.org) keeps periodic
 // snapshots of github.com/trending. We use the CDX API to enumerate one capture
@@ -8,6 +8,14 @@ import { fetchHtml, parseTrendingHtml, trendingUrl } from './scrapeTrending.js'
 const CDX = 'https://web.archive.org/cdx/search/cdx'
 
 const ymd = (date) => date.replace(/-/g, '') // 'YYYY-MM-DD' -> 'YYYYMMDD'
+
+// The URL the Archive actually captured (scheme-less, for CDX matching).
+// `daily` is the bare /trending page (densely archived ~1×/day); weekly/monthly
+// live under explicit ?since= variants (captured far less often).
+function waybackTarget(since, language) {
+  const path = language ? `github.com/trending/${encodeURIComponent(language)}` : 'github.com/trending'
+  return since === 'daily' ? path : `${path}?since=${since}`
+}
 
 // '20240115093000' -> '2024-01-15'
 function tsToDate(ts) {
@@ -21,8 +29,7 @@ function tsToDate(ts) {
  * @returns {Promise<Array<{date: string, timestamp: string, original: string}>>}
  */
 export async function listWaybackSnapshots({ from, to, since = 'daily', language = '' }) {
-  // CDX matches the captured URL; strip the scheme so http/https captures both match.
-  const target = trendingUrl(since, language).replace(/^https?:\/\//, '')
+  const target = waybackTarget(since, language)
   const params = new URLSearchParams({
     url: target,
     output: 'json',

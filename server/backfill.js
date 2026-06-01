@@ -1,3 +1,4 @@
+import { usingProxy, proxyEndpoint } from './proxy.js' // installs proxy dispatcher (must be first)
 import { listWaybackSnapshots, scrapeWaybackSnapshot } from './scrapeWayback.js'
 import { persistSnapshot } from './ingest.js'
 import { pool, hasDb } from './db.js'
@@ -60,7 +61,9 @@ async function run() {
   const langs = args.langs ? resolveLangs(args.langs) : ['']
 
   console.log(`backfill ${from} → ${to}`)
-  console.log(`periods: ${periods.join(', ')}  ·  langs: ${langs.map((l) => l || 'all').join(', ')}\n`)
+  console.log(`periods: ${periods.join(', ')}  ·  langs: ${langs.map((l) => l || 'all').join(', ')}`)
+  if (usingProxy) console.log(`proxy: ${proxyEndpoint}`)
+  console.log('')
 
   let days = 0
   let fail = 0

@@ -1,0 +1,70 @@
+name: backfill-history
+
+# 从 Internet Archive（Wayback Machine）回填历史 trending 快照。
+# - 定时：每周滚动补最近若干天，修补实时 ingest 偶尔漏掉的日子。
+# - 手动：在 Actions 页用 workflow_dispatch 指定区间/周期/语言，做一次性历史回填。
+# CI runner 直连 archive.org，无需代理；server/proxy.js 在无代理变量时自动 no-op。
+on:
+  schedule:
+    - cron: '30 5 * * 1' # 每周一 05:30 UTC（与 ingest 错开）
+  workflow_dispatch:
+    inputs:
+      from:
+        description: '起始日期 YYYY-MM-DD（填了就用区间，忽略 days）'
+        required: false
+        default: ''
+      to:
+        description: '结束日期 YYYY-MM-DD（留空=今天）'
+        required: false
+        default: ''
+      days:
+        description: '最近 N 天到今天（from 留空时生效）'
+        required: false
+        default: ''
+      periods:
+        description: '周期，逗号分隔'
+        required: false
+        default: 'daily,weekly,monthly'
+      langs:
+        description: '语言，逗号分隔（all=不分语言）'
+        required: false
+        default: 'all'
+
+concurrency:
+  group: backfill
+  cancel-in-progress: false
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      # 幂等建表（已存在则无操作），保证可独立运行
+      - run: npm run db:push
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      - name: Backfill from Wayback
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          FROM: ${{ github.event.inputs.from }}
+          TO: ${{ github.event.inputs.to }}
+          DAYS: ${{ github.event.inputs.days }}
+          PERIODS: ${{ github.event.inputs.periods }}
+          LANGS: ${{ github.event.inputs.langs }}
+        run: |
+          PERIODS="${PERIODS:-daily,weekly,monthly}"
+          LANGS="${LANGS:-all}"
+          if [ -n "$FROM" ]; then
+            RANGE="--from=$FROM"
+            [ -n "$TO" ] && RANGE="$RANGE --to=$TO"
+          elif [ -n "$DAYS" ]; then
+            RANGE="--days=$DAYS"
+          else
+            RANGE="--days=10"   # 定时默认：滚动补最近 10 天
+          fi
+          echo "backfill $RANGE --periods=$PERIODS --langs=$LANGS"
+          npm run backfill -- $RANGE --periods="$PERIODS" --langs="$LANGS"
