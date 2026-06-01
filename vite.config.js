@@ -1,52 +1,65 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
-import { scrapeTrending } from './server/scrapeTrending.js'
 
-// Dev-only middleware: serves real GitHub trending data without CORS.
-// For production, port this handler to a serverless function (same logic) and
-// swap this in-memory cache for the CDN/KV layer (see README "数据持久化").
+// Dev-only API middleware. Persistence lives behind the store layer (Supabase
+// when configured, in-memory cache otherwise). When CF is added later, the same
+// store/ingest modules move into a Worker — the frontend keeps calling /api/*.
 function trendingApi() {
-  const TTL = 30 * 60 * 1000 // 30 min — GitHub trending only updates a few times/day
-  const cache = new Map() // key -> { at, repos }
-  const inflight = new Map() // key -> Promise (coalesce concurrent/StrictMode double fetches)
+  const json = (res, body, status = 200) => {
+    res.statusCode = status
+    res.setHeader('Content-Type', 'application/json')
+    res.end(JSON.stringify(body))
+  }
 
   return {
     name: 'trending-api',
-    configureServer(server) {
-      server.middlewares.use('/api/trending', async (req, res) => {
-        const params = new URL(req.url, 'http://localhost').searchParams
-        const since = params.get('since') || 'daily'
-        const language = params.get('language') || ''
-        const key = `${since}:${language}`
-        res.setHeader('Content-Type', 'application/json')
+    async configureServer(server) {
+      // store.js touches process.env (Supabase keys) — import after loadEnv ran.
+      const { getTrending, getHistory, getHistoryDates } = await import('./server/store.js')
 
-        const hit = cache.get(key)
-        if (hit && Date.now() - hit.at < TTL) {
-          res.end(JSON.stringify({ repos: hit.repos, since, language, cached: true }))
-          return
-        }
+      server.middlewares.use('/api/trending', async (req, res) => {
+        const p = new URL(req.url, 'http://localhost').searchParams
+        const since = p.get('since') || 'daily'
+        const language = p.get('language') || ''
         try {
-          if (!inflight.has(key)) inflight.set(key, scrapeTrending(since, language))
-          const repos = await inflight.get(key)
-          cache.set(key, { at: Date.now(), repos })
-          res.end(JSON.stringify({ repos, since, language, cached: false }))
+          const { repos, source } = await getTrending(since, language)
+          json(res, { repos, since, language, source })
         } catch (e) {
-          if (hit) {
-            // serve stale on upstream failure rather than erroring
-            res.end(JSON.stringify({ repos: hit.repos, since, language, stale: true }))
-          } else {
-            res.statusCode = 502
-            res.end(JSON.stringify({ error: String(e.message || e) }))
-          }
-        } finally {
-          inflight.delete(key)
+          json(res, { error: String(e.message || e) }, 502)
+        }
+      })
+
+      server.middlewares.use('/api/history/dates', async (req, res) => {
+        const p = new URL(req.url, 'http://localhost').searchParams
+        const since = p.get('since') || 'daily'
+        const language = p.get('language') || ''
+        try {
+          json(res, { dates: await getHistoryDates(since, language) })
+        } catch (e) {
+          json(res, { error: String(e.message || e) }, 502)
+        }
+      })
+
+      server.middlewares.use('/api/history', async (req, res) => {
+        const p = new URL(req.url, 'http://localhost').searchParams
+        const date = p.get('date')
+        const since = p.get('since') || 'daily'
+        const language = p.get('language') || ''
+        try {
+          json(res, { repos: await getHistory(date, since, language), date, since, language })
+        } catch (e) {
+          json(res, { error: String(e.message || e) }, 502)
         }
       })
     },
   }
 }
 
-export default defineConfig({
-  plugins: [react(), tailwindcss(), trendingApi()],
+export default defineConfig(({ mode }) => {
+  // Load .env into process.env so the server-side store can read Supabase keys.
+  Object.assign(process.env, loadEnv(mode, process.cwd(), ''))
+  return {
+    plugins: [react(), tailwindcss(), trendingApi()],
+  }
 })

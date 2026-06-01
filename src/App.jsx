@@ -8,7 +8,7 @@ import {
   X,
   ArrowsClockwise,
 } from '@phosphor-icons/react'
-import { fetchTrending } from './api/trending.js'
+import { fetchTrending, fetchHistory, fetchHistoryDates } from './api/trending.js'
 import { useI18n } from './i18n.jsx'
 import ShareCard from './components/ShareCard.jsx'
 import LanguageSwitcher from './components/LanguageSwitcher.jsx'
@@ -153,6 +153,8 @@ export default function App() {
   const { t, locale } = useI18n()
   const [since, setSince] = useState('daily')
   const [language, setLanguage] = useState('')
+  const [archiveDate, setArchiveDate] = useState('') // '' = latest/live
+  const [dates, setDates] = useState([])
   const [repos, setRepos] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -162,7 +164,11 @@ export default function App() {
     setLoading(true)
     setError(null)
     try {
-      setRepos(await fetchTrending(since, language))
+      setRepos(
+        archiveDate
+          ? await fetchHistory(archiveDate, since, language)
+          : await fetchTrending(since, language),
+      )
     } catch (e) {
       setError(e.message)
       setRepos([])
@@ -174,6 +180,12 @@ export default function App() {
   useEffect(() => {
     load()
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [since, language, archiveDate])
+
+  // Refresh the archive date list when period/language changes; default to live.
+  useEffect(() => {
+    setArchiveDate('')
+    fetchHistoryDates(since, language).then(setDates).catch(() => setDates([]))
   }, [since, language])
 
   const dateline = new Date().toLocaleDateString(locale, {
@@ -247,7 +259,24 @@ export default function App() {
                 ))}
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
+                {dates.length > 0 && (
+                  <select
+                    value={archiveDate}
+                    onChange={(e) => setArchiveDate(e.target.value)}
+                    title={t('archivePrefix')}
+                    className={`cursor-pointer border-b bg-transparent py-1 pr-6 font-mono text-xs uppercase tracking-wider focus:border-vermilion focus:outline-none ${
+                      archiveDate ? 'border-vermilion text-vermilion' : 'border-ink/30 text-ink-soft'
+                    }`}
+                  >
+                    <option value="">◷ {t('archiveLatest')}</option>
+                    {dates.map((d) => (
+                      <option key={d} value={d}>
+                        {d}
+                      </option>
+                    ))}
+                  </select>
+                )}
                 <select
                   value={language}
                   onChange={(e) => setLanguage(e.target.value)}
