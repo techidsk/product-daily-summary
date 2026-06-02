@@ -16,8 +16,10 @@
     />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
     <meta name="author" content="GitHub Trending Daily" />
-    <meta name="theme-color" content="#e63329" />
+    <meta name="theme-color" content="#bf3b2b" />
     <meta name="color-scheme" content="light" />
+    <meta name="application-name" content="Trending" />
+    <meta name="apple-mobile-web-app-title" content="Trending" />
 
     <!-- canonical & language alternates (replace your-domain.com) -->
     <link rel="canonical" href="https://your-domain.com/" />
@@ -26,9 +28,12 @@
     <link rel="alternate" hreflang="ja" href="https://your-domain.com/" />
     <link rel="alternate" hreflang="x-default" href="https://your-domain.com/" />
 
-    <!-- icons -->
+    <!-- icons & PWA manifest -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
 
     <!-- ──────────────── Open Graph ──────────────── -->
     <meta property="og:type" content="website" />
@@ -39,7 +44,11 @@
       content="每天追踪 GitHub 最热门的开源项目：每日 / 每周 / 每月排行，按语言筛选，历史归档可回看。"
     />
     <meta property="og:url" content="https://your-domain.com/" />
-    <meta property="og:image" content="https://your-domain.com/og.svg" />
+    <meta property="og:image" content="https://your-domain.com/og.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Trending — 每日 / 每周 / 每月最热开源项目排行" />
     <meta property="og:locale" content="zh_CN" />
     <meta property="og:locale:alternate" content="en_US" />
     <meta property="og:locale:alternate" content="ja_JP" />
@@ -51,7 +60,8 @@
       name="twitter:description"
       content="每天追踪 GitHub 最热门的开源项目：每日 / 每周 / 每月排行，按语言筛选，历史归档可回看。"
     />
-    <meta name="twitter:image" content="https://your-domain.com/og.svg" />
+    <meta name="twitter:image" content="https://your-domain.com/og.png" />
+    <meta name="twitter:image:alt" content="Trending — 每日 / 每周 / 每月最热开源项目排行" />
 
     <!-- ──────────────── Structured data ──────────────── -->
     <script type="application/ld+json">
@@ -71,7 +81,39 @@
         "@type": "Organization",
         "name": "GitHub Trending Daily",
         "url": "https://your-domain.com/",
-        "logo": "https://your-domain.com/favicon.svg"
+        "logo": "https://your-domain.com/icon-512.png"
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How often is the data updated?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "A scheduled job fetches the rankings every few hours, keeping the list close to GitHub's live Trending page."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Where does the historical data come from?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "GitHub only shows the current day; earlier days are backfilled from the Internet Archive (Wayback Machine). Highlighted dates in the calendar are the archived days you can revisit."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I filter by programming language?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes — JavaScript, TypeScript, Python, Go, Rust, Java, C++ and more. The ranking updates when you switch languages."
+            }
+          }
+        ]
       }
     </script>
 

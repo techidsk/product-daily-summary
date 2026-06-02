@@ -13,6 +13,7 @@ import { readFile, writeFile } from 'node:fs/promises'
 import { createClient } from '@supabase/supabase-js'
 
 const DIST = new URL('../dist/index.html', import.meta.url)
+const DIST_SITEMAP = new URL('../dist/sitemap.xml', import.meta.url)
 const SITE = 'https://your-domain.com' // keep in sync with index.html / sitemap.xml
 
 const url = process.env.VITE_SUPABASE_URL
@@ -118,6 +119,24 @@ function renderJsonLd({ date, repos }) {
   return `<script type="application/ld+json">${JSON.stringify(list)}</script>`
 }
 
+// Stamp the homepage <lastmod> (the first one in the file) with the latest
+// snapshot date, so search engines see the daily ranking as freshly updated.
+// Best-effort: a missing/odd sitemap just skips, never breaks the build.
+async function stampSitemap(date) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(date))) return
+  let xml
+  try {
+    xml = await readFile(DIST_SITEMAP, 'utf8')
+  } catch {
+    return // no sitemap in dist — nothing to stamp
+  }
+  const stamped = xml.replace(/<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/, `<lastmod>${date}</lastmod>`)
+  if (stamped !== xml) {
+    await writeFile(DIST_SITEMAP, stamped, 'utf8')
+    console.log(`[prerender] Stamped sitemap homepage lastmod = ${date}.`)
+  }
+}
+
 async function main() {
   if (!url || !key) {
     console.warn('[prerender] VITE_SUPABASE_URL / KEY not set — skipping (dist/index.html unchanged).')
@@ -164,6 +183,8 @@ async function main() {
 
   await writeFile(DIST, html, 'utf8')
   console.log(`[prerender] Injected ${data.repos.length} repos for ${data.date} into dist/index.html.`)
+
+  await stampSitemap(data.date)
 }
 
 main().catch((e) => {

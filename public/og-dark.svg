@@ -1,14 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
-  <!-- Open Graph card, editorial masthead style. Source-agnostic "Trending"
-       brand; GitHub named as the current source. Georgia/monospace keep the
-       rasterized PNG faithful on any machine (no web-font dependency). -->
-  <rect width="1200" height="630" fill="#f7f3ea"/>
-  <rect x="0" y="0" width="1200" height="14" fill="#211c15"/>
+  <!-- Dark (ink-ground) Open Graph variant — stands out in social feeds.
+       Same editorial layout as og.svg, inverted palette. Georgia/monospace
+       keep the rasterized PNG faithful on any machine (no web-font dependency). -->
+  <rect width="1200" height="630" fill="#211c15"/>
+  <rect x="0" y="0" width="1200" height="14" fill="#bf3b2b"/>
 
-  <!-- brand mark: ascending bars + rising arrow -->
+  <!-- brand mark: ascending bars + rising arrow on a paper chip -->
   <g transform="translate(80 96)">
-    <rect width="96" height="96" rx="20" fill="#211c15"/>
-    <g transform="scale(1.5)" fill="#f7f3ea">
+    <rect width="96" height="96" rx="20" fill="#f7f3ea"/>
+    <g transform="scale(1.5)" fill="#211c15">
       <rect x="13" y="40" width="9" height="13" rx="1.5"/>
       <rect x="27.5" y="33" width="9" height="20" rx="1.5"/>
       <rect x="42" y="26" width="9" height="27" rx="1.5"/>
@@ -21,17 +21,17 @@
     </g>
   </g>
 
-  <text x="196" y="138" font-family="'Courier New', monospace" font-size="26" fill="#bf3b2b"
+  <text x="196" y="138" font-family="'Courier New', monospace" font-size="26" fill="#e0654f"
     letter-spacing="10" font-weight="bold">DAILY · WEEKLY · MONTHLY</text>
-  <text x="194" y="184" font-family="Georgia, 'Times New Roman', serif" font-size="34" fill="#897e69"
+  <text x="194" y="184" font-family="Georgia, 'Times New Roman', serif" font-size="34" fill="#a99a7d"
     letter-spacing="2">Open-source trending, archived forever</text>
 
   <text x="74" y="380" font-family="Georgia, 'Times New Roman', serif" font-size="210"
-    font-style="italic" fill="#211c15">Trending</text>
+    font-style="italic" fill="#f7f3ea">Trending</text>
 
-  <line x1="80" y1="430" x2="1120" y2="430" stroke="#211c15" stroke-width="3"/>
+  <line x1="80" y1="430" x2="1120" y2="430" stroke="#4a4234" stroke-width="3"/>
 
-  <text x="80" y="498" font-family="Georgia, 'Times New Roman', serif" font-size="40" fill="#211c15">
+  <text x="80" y="498" font-family="Georgia, 'Times New Roman', serif" font-size="40" fill="#f1ebdd">
     The hottest open-source projects on GitHub, ranked daily</text>
   <text x="80" y="556" font-family="'Courier New', monospace" font-size="27" fill="#897e69">
     每日 / 每周 / 每月最热开源项目排行 · 历史归档可回看 · 一键分享卡片</text>
