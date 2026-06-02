@@ -21,11 +21,11 @@
     <meta name="application-name" content="Trending" />
     <meta name="apple-mobile-web-app-title" content="Trending" />
 
-    <!-- canonical (replace your-domain.com). Single URL serves all three UI
-         languages client-side, so we don't emit per-language hreflang (that
-         requires distinct URLs); en is the primary indexed language. -->
-    <link rel="canonical" href="https://your-domain.com/" />
-    <link rel="alternate" hreflang="x-default" href="https://your-domain.com/" />
+    <!-- canonical. Single URL serves all three UI languages client-side, so we
+         don't emit per-language hreflang (that requires distinct URLs); en is
+         the primary indexed language. -->
+    <link rel="canonical" href="https://trending.magikaru.com/" />
+    <link rel="alternate" hreflang="x-default" href="https://trending.magikaru.com/" />
 
     <!-- icons & PWA manifest -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -42,8 +42,8 @@
       property="og:description"
       content="The hottest open-source projects on GitHub, ranked daily / weekly / monthly. Filter by language and revisit archived days."
     />
-    <meta property="og:url" content="https://your-domain.com/" />
-    <meta property="og:image" content="https://your-domain.com/og.png" />
+    <meta property="og:url" content="https://trending.magikaru.com/" />
+    <meta property="og:image" content="https://trending.magikaru.com/og.png" />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -59,7 +59,7 @@
       name="twitter:description"
       content="The hottest open-source projects on GitHub, ranked daily / weekly / monthly. Filter by language and revisit archived days."
     />
-    <meta name="twitter:image" content="https://your-domain.com/og.png" />
+    <meta name="twitter:image" content="https://trending.magikaru.com/og.png" />
     <meta name="twitter:image:alt" content="Trending — daily, weekly &amp; monthly top open-source repos on GitHub" />
 
     <!-- ──────────────── Structured data ──────────────── -->
@@ -69,7 +69,7 @@
         "@type": "WebSite",
         "name": "GitHub Trending Daily",
         "alternateName": "Trending — Daily Open-Source Digest",
-        "url": "https://your-domain.com/",
+        "url": "https://trending.magikaru.com/",
         "description": "Track the hottest trending repositories on GitHub — daily, weekly and monthly rankings with language filters and historical archives.",
         "inLanguage": ["en", "zh-CN", "ja"]
       }
@@ -79,8 +79,8 @@
         "@context": "https://schema.org",
         "@type": "Organization",
         "name": "GitHub Trending Daily",
-        "url": "https://your-domain.com/",
-        "logo": "https://your-domain.com/icon-512.png"
+        "url": "https://trending.magikaru.com/",
+        "logo": "https://trending.magikaru.com/icon-512.png"
       }
     </script>
     <script type="application/ld+json">
@@ -110,6 +110,22 @@
             "acceptedAnswer": {
               "@type": "Answer",
               "text": "Yes — JavaScript, TypeScript, Python, Go, Rust, Java, C++ and more. The ranking updates when you switch languages."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What's the difference between the daily, weekly and monthly lists?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "They use the same data over different time windows: daily reflects star velocity over the last day and is the most reactive; weekly smooths spikes over seven days; monthly is the steadiest and rewards a full month of attention. A repo that appears in all three at once is usually a stronger signal."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What do the star and fork numbers mean?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Stars are a cumulative measure of interest; the ranking is actually driven by the stars gained within the period (the \"+N today\" figure). A fork is someone's copy of a repo for modifying or contributing, so a high fork ratio often means a project is being actively used, not just bookmarked."
             }
           }
         ]

@@ -418,7 +418,7 @@ export default function App() {
               {t('faqHeading')}
             </h2>
             <dl className="mt-3 space-y-4">
-              {[1, 2, 3].map((i) => (
+              {[1, 2, 3, 4, 5].map((i) => (
                 <div key={i}>
                   <dt className="text-sm font-semibold text-ink">{t(`faqQ${i}`)}</dt>
                   <dd className="mt-1 max-w-prose text-sm leading-relaxed text-ink-soft">
@@ -432,6 +432,9 @@ export default function App() {
 
         <footer className="mt-14 border-t border-line pt-4 text-center font-mono text-[11px] uppercase tracking-widest text-muted">
           <nav className="mb-2 flex flex-wrap items-center justify-center gap-x-5 gap-y-1">
+            <a href="/guide.html" className="transition hover:text-vermilion">
+              {t('navGuide')}
+            </a>
             <a href="/about.html" className="transition hover:text-vermilion">
               {t('navAbout')}
             </a>

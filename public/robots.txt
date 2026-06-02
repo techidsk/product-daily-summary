@@ -1,4 +1,4 @@
-# https://your-domain.com  — replace with your real domain below
+# https://trending.magikaru.com
 User-agent: *
 Allow: /
 
@@ -9,4 +9,4 @@ Allow: /
 User-agent: AdsBot-Google
 Allow: /
 
-Sitemap: https://your-domain.com/sitemap.xml
+Sitemap: https://trending.magikaru.com/sitemap.xml

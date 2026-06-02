@@ -46,6 +46,13 @@ const translations = {
     faqA2: 'GitHub 只显示当天榜单，更早的日期由 Internet Archive（Wayback Machine）公开存档回填。日历中高亮的即为已归档、可回看的日期。',
     faqQ3: '可以按编程语言筛选吗？',
     faqA3: '可以。支持 JavaScript、TypeScript、Python、Go、Rust、Java、C++ 等主流语言，切换后排行会随之更新。',
+    faqQ4: '每日、每周、每月榜单有什么区别？',
+    faqA4:
+      '三者用的是同一份数据，只是时间窗口不同：每日反映最近一天的涨星速度，最敏感；每周把波动平滑到 7 天；每月最稳，奖励持续一个月的关注。同时出现在三个榜单里的项目，信号通常更强。',
+    faqQ5: '星标（star）和 Fork 数字代表什么？',
+    faqA5:
+      '星标是收藏与关注度的累计票数；真正决定排名的是「周期内新增星标」（如「今日 +N」）这一增速指标。Fork 是他人复制仓库以便修改或贡献，Fork 占比高往往说明项目正被实际使用，而不只是被收藏。',
+    navGuide: '指南',
     navAbout: '关于',
     navPrivacy: '隐私政策',
     navContact: '联系我们',
@@ -87,6 +94,13 @@ const translations = {
     faqA2: 'GitHub only shows the current day; earlier days are backfilled from the Internet Archive (Wayback Machine). Highlighted dates in the calendar are the archived days you can revisit.',
     faqQ3: 'Can I filter by programming language?',
     faqA3: 'Yes — JavaScript, TypeScript, Python, Go, Rust, Java, C++ and more. The ranking updates when you switch languages.',
+    faqQ4: "What's the difference between the daily, weekly and monthly lists?",
+    faqA4:
+      'They use the same data over different time windows: daily reflects star velocity over the last day and is the most reactive; weekly smooths spikes over seven days; monthly is the steadiest and rewards a full month of attention. A repo that appears in all three at once is usually a stronger signal.',
+    faqQ5: 'What do the star and fork numbers mean?',
+    faqA5:
+      'Stars are a cumulative measure of interest; the ranking is actually driven by the stars gained within the period (the “+N today” figure). A fork is someone’s copy of a repo for modifying or contributing, so a high fork ratio often means a project is being actively used, not just bookmarked.',
+    navGuide: 'Guide',
     navAbout: 'About',
     navPrivacy: 'Privacy',
     navContact: 'Contact',
@@ -128,6 +142,13 @@ const translations = {
     faqA2: 'GitHub は当日分のみ表示するため、過去の日付は Internet Archive（Wayback Machine）の公開アーカイブから補完しています。カレンダーで強調された日付が閲覧可能なアーカイブ日です。',
     faqQ3: 'プログラミング言語で絞り込めますか？',
     faqA3: 'はい。JavaScript・TypeScript・Python・Go・Rust・Java・C++ などに対応し、切り替えるとランキングが更新されます。',
+    faqQ4: '毎日・毎週・毎月のランキングは何が違いますか？',
+    faqA4:
+      '同じデータを異なる期間で見たものです。毎日は直近1日のスター増加（最も反応が速い）、毎週は7日間で急騰を平準化、毎月は最も安定し1か月の継続的な注目を反映します。3つすべてに登場するリポジトリは、より強いシグナルです。',
+    faqQ5: 'スター数とフォーク数は何を意味しますか？',
+    faqA5:
+      'スターは関心の累計です。ランキングを実際に左右するのは期間内に増えたスター（「本日 +N」）という増加量です。フォークは改変や貢献のためのコピーで、フォーク比率が高い場合は、単なるブックマークではなく実際に使われていることを示します。',
+    navGuide: 'ガイド',
     navAbout: '概要',
     navPrivacy: 'プライバシー',
     navContact: 'お問い合わせ',

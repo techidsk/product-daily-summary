@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Understanding GitHub Trending — How the Rankings Work · Guide</title>
+    <meta name="description" content="A plain-English guide to GitHub Trending: how repositories are ranked, what daily vs weekly vs monthly means, how to read stars and forks, language filters, and why a historical archive matters." />
+    <link rel="canonical" href="https://trending.magikaru.com/guide.html" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>
+      :root { color-scheme: light; }
+      body { margin: 0; background: #f5f1e8; color: #1a1a1a; font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; line-height: 1.75; }
+      .wrap { max-width: 760px; margin: 0 auto; padding: 56px 24px 96px; }
+      a { color: #c02a22; }
+      h1 { font-size: 2.4rem; margin: 0 0 .25em; letter-spacing: -.01em; line-height: 1.15; }
+      h2 { font-size: 1.35rem; margin: 2.2em 0 .5em; border-top: 1px solid #d8d2c4; padding-top: 1.1em; }
+      h3 { font-size: 1.05rem; margin: 1.6em 0 .3em; }
+      .kicker { font-family: ui-monospace, monospace; font-size: .72rem; letter-spacing: .3em; text-transform: uppercase; color: #c02a22; }
+      .lead { font-size: 1.1rem; color: #3a3a3a; }
+      .updated { font-family: ui-monospace, monospace; font-size: .75rem; color: #8a8a8a; }
+      nav { font-family: ui-monospace, monospace; font-size: .72rem; letter-spacing: .15em; text-transform: uppercase; margin-bottom: 40px; border-bottom: 2px solid #1a1a1a; padding-bottom: 12px; }
+      nav a { margin-right: 18px; text-decoration: none; color: #6b6b6b; }
+      nav a:hover { color: #1a1a1a; }
+      table { border-collapse: collapse; width: 100%; margin: 1em 0; font-size: .95rem; }
+      th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #d8d2c4; vertical-align: top; }
+      th { font-family: ui-monospace, monospace; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: #6b6b6b; }
+      code { font-family: ui-monospace, monospace; background: #ece6d8; padding: 1px 5px; border-radius: 3px; font-size: .9em; }
+      footer { margin-top: 64px; border-top: 1px solid #d8d2c4; padding-top: 20px; font-family: ui-monospace, monospace; font-size: .72rem; letter-spacing: .15em; text-transform: uppercase; color: #8a8a8a; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <nav>
+        <a href="/">← Home</a>
+        <a href="/guide.html">Guide</a>
+        <a href="/about.html">About</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/contact.html">Contact</a>
+      </nav>
+
+      <p class="kicker">Guide</p>
+      <h1>Understanding GitHub Trending: How the Rankings Work and How to Read Them</h1>
+      <p class="updated">Last updated: 2026-06-02</p>
+
+      <p class="lead">
+        GitHub Trending is one of the most-watched signals in open source — a quick read on which projects the
+        developer community is paying attention to right now. But the page is easy to misread: it is not a list of the
+        biggest or most popular repositories, and it changes for reasons that are not always obvious. This guide
+        explains what trending actually measures, how to interpret the numbers, and how to get the most out of the
+        daily, weekly and monthly views on this site.
+      </p>
+
+      <h2>What "trending" actually measures</h2>
+      <p>
+        A common misconception is that GitHub Trending ranks repositories by their total star count. It does not. If
+        it did, the same handful of giant, long-established projects (think frameworks with hundreds of thousands of
+        stars) would sit at the top forever and the list would never change.
+      </p>
+      <p>
+        Instead, trending is about <strong>momentum</strong>: roughly, how many <em>new</em> stars a repository
+        gained over a recent window relative to its normal baseline. A small project that picks up a few hundred stars
+        in a single day because it was shared widely can easily outrank a famous project that gains the same number of
+        stars but considers that an ordinary Tuesday. In practice this means trending surfaces what is
+        <strong>newly interesting</strong> — fresh launches, viral tools, projects riding a news cycle — rather than
+        what is merely large.
+      </p>
+
+      <h2>Daily, weekly, and monthly: the same data, three lenses</h2>
+      <p>
+        This site offers three time windows, and each answers a slightly different question:
+      </p>
+      <table>
+        <thead>
+          <tr><th>View</th><th>What it captures</th><th>Best for</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Daily</strong></td>
+            <td>Repositories gaining stars fastest in the last day. The most volatile and reactive view.</td>
+            <td>Catching brand-new launches and what is going viral right now.</td>
+          </tr>
+          <tr>
+            <td><strong>Weekly</strong></td>
+            <td>Momentum smoothed over seven days, filtering out single-day spikes.</td>
+            <td>Spotting projects with sustained, more-than-one-news-cycle interest.</td>
+          </tr>
+          <tr>
+            <td><strong>Monthly</strong></td>
+            <td>The slowest-moving view; rewards a full month of consistent attention.</td>
+            <td>Identifying durable shifts and tools that are becoming standards.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        A useful habit is to compare them: a repository that appears in <em>all three</em> views at once is showing
+        both a spike and staying power — usually a stronger signal than a one-day wonder that tops the daily list and
+        vanishes by the weekend.
+      </p>
+
+      <h2>How to read the numbers</h2>
+      <h3>Stars</h3>
+      <p>
+        A star is a bookmark plus a vote of interest. The total star count tells you how much cumulative attention a
+        project has ever received. It is a lagging indicator — useful for context, but not what drives the ranking.
+      </p>
+      <h3>Stars gained in the period</h3>
+      <p>
+        The "<code>+N today</code>" (or this week / this month) figure is the number that actually matters for
+        trending. It is the velocity — the recent gain — and it is what orders the list. When you are scanning for
+        what is hot, read this column first.
+      </p>
+      <h3>Forks</h3>
+      <p>
+        A fork is a personal copy of a repository, usually created to contribute changes or to build on top of the
+        code. A high fork count relative to stars often signals a project that people are actively
+        <em>using and modifying</em>, not just admiring — for example a template, a boilerplate, or a library with
+        many contributors.
+      </p>
+
+      <h2>Filtering by language</h2>
+      <p>
+        The global list is dominated by whatever is loudest across all of GitHub on a given day, which is frequently
+        JavaScript, TypeScript or Python. If you work in a specific stack, the language filter is the most valuable
+        control on the page: switch to <code>Rust</code>, <code>Go</code>, <code>Java</code> or another language and
+        the ranking is recomputed for that ecosystem alone. This is the difference between "what is trending
+        everywhere" and "what is trending in <em>my</em> world."
+      </p>
+
+      <h2>Why a historical archive matters</h2>
+      <p>
+        GitHub's official Trending page only ever shows the current moment. Once a day rolls over, yesterday's ranking
+        is gone — there is no built-in way to ask "what was trending the week that framework X launched?" That makes
+        trending oddly hard to study, despite being a rich record of the open-source zeitgeist.
+      </p>
+      <p>
+        This site keeps a snapshot of every day and backfills older days from the public Internet Archive, so the
+        rankings become something you can revisit. You can scroll back through a calendar of archived days, watch a
+        project climb and fade, or check what the community cared about on a specific date. Trends are far more
+        interesting when you can see them <em>over time</em> rather than as a single frozen frame.
+      </p>
+
+      <h2>Tips for getting the most out of it</h2>
+      <ul>
+        <li><strong>Read velocity, not totals.</strong> The "+N" gained-this-period number is the real story.</li>
+        <li><strong>Cross-check the three windows.</strong> Presence in daily + weekly + monthly beats a lone daily spike.</li>
+        <li><strong>Filter to your language</strong> to cut through the global noise.</li>
+        <li><strong>Use the archive</strong> to study how a project's momentum evolved, not just where it sits today.</li>
+        <li><strong>Treat it as a discovery tool, not a quality ranking.</strong> Trending tells you what is getting
+          attention; whether a project is right for you is a separate judgement.</li>
+      </ul>
+
+      <h2>A note on accuracy</h2>
+      <p>
+        The figures shown here are captured at the moment each snapshot is taken and may lag GitHub's live data by a
+        short while. GitHub does not publish the exact formula behind Trending, so any third-party description —
+        including this one — is an informed explanation of observed behaviour rather than an official specification.
+        This site is independent and not affiliated with or endorsed by GitHub or Microsoft; all repository names,
+        descriptions and logos belong to their respective owners.
+      </p>
+
+      <footer>
+        Data from github.com/trending · independently maintained · not affiliated with GitHub<br />
+        <a href="/" style="color:#8a8a8a;">Back to home</a> ·
+        <a href="/about.html" style="color:#8a8a8a;">About</a> ·
+        <a href="/contact.html" style="color:#8a8a8a;">Contact</a>
+      </footer>
+    </div>
+  </body>
+</html>

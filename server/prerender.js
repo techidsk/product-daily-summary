@@ -14,7 +14,7 @@ import { createClient } from '@supabase/supabase-js'
 
 const DIST = new URL('../dist/index.html', import.meta.url)
 const DIST_SITEMAP = new URL('../dist/sitemap.xml', import.meta.url)
-const SITE = 'https://your-domain.com' // keep in sync with index.html / sitemap.xml
+const SITE = 'https://trending.magikaru.com' // keep in sync with index.html / sitemap.xml
 
 const url = process.env.VITE_SUPABASE_URL
 const key = process.env.VITE_SUPABASE_PUBLISHABLE_KEY
@@ -95,6 +95,7 @@ function renderContent({ date, repos }) {
         <ol>${items}
         </ol>
         <nav aria-label="site">
+          <a href="${SITE}/guide.html">Guide</a> ·
           <a href="${SITE}/about.html">About</a> ·
           <a href="${SITE}/privacy.html">Privacy</a> ·
           <a href="${SITE}/contact.html">Contact</a>
