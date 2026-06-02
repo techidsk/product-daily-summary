@@ -30,7 +30,7 @@ export default function LanguageSwitcher() {
       </button>
 
       {open && (
-        <div className="absolute right-0 z-20 mt-1.5 w-36 overflow-hidden rounded-sm border border-line bg-paper py-1 shadow-xl">
+        <div className="absolute right-0 z-50 mt-1.5 w-36 overflow-hidden rounded-sm border border-line bg-paper py-1 shadow-xl">
           {LANG_OPTIONS.map((o) => (
             <button
               key={o.value}

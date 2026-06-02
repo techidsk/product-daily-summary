@@ -75,10 +75,9 @@
       }
     </script>
 
-    <!-- Google AdSense — replace ca-pub-XXXXXXXXXXXXXXXX, then uncomment -->
-    <!--
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
-    -->
+    <!-- Google AdSense is loaded at runtime by src/lib/ads.js, gated on the
+         VITE_ADSENSE_CLIENT env var. No script runs until that id is set, so
+         there is nothing to edit here. See .env.example for the AdSense vars. -->
   </head>
   <body>
     <div id="root">

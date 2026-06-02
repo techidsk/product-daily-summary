@@ -11,9 +11,11 @@ import {
 import { fetchTrending, fetchHistory, fetchHistoryDates } from './api/trending.js'
 import { useI18n } from './i18n.jsx'
 import ShareCard from './components/ShareCard.jsx'
+import RepoShareCard from './components/RepoShareCard.jsx'
 import LanguageSwitcher from './components/LanguageSwitcher.jsx'
 import AdSlot from './components/AdSlot.jsx'
 import Calendar from './components/Calendar.jsx'
+import { ADS_VISIBLE } from './lib/ads.js'
 
 const PERIODS = [
   { key: 'daily', tk: 'periodDaily' },
@@ -37,18 +39,34 @@ function formatNum(n) {
   return String(n)
 }
 
-function RepoRow({ repo, index }) {
+function RepoRow({ repo, index, onShare }) {
+  const { t } = useI18n()
   const top = repo.rank <= 3
   return (
     <a
       href={repo.url}
       target="_blank"
       rel="noreferrer"
-      className="rise group relative flex gap-5 border-t border-line-soft py-6 pl-4 transition-colors first:border-t-0 hover:bg-paper-2/70"
+      className="rise group relative flex gap-5 border-t border-line-soft py-6 pl-4 pr-12 transition-colors first:border-t-0 hover:bg-paper-2/70"
       style={{ animationDelay: `${Math.min(index, 12) * 35}ms` }}
     >
       {/* hover marginalia bar */}
       <span className="absolute left-0 top-0 h-full w-[3px] origin-top scale-y-0 bg-vermilion transition-transform duration-300 group-hover:scale-y-100" />
+
+      {/* per-repo share — opens a single-project card */}
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          onShare(repo)
+        }}
+        title={t('shareRepo')}
+        aria-label={t('shareRepo')}
+        className="absolute right-3 top-1/2 -translate-y-1/2 rounded-sm p-2 text-muted opacity-100 transition hover:bg-paper-2 hover:text-vermilion focus:opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
+      >
+        <ShareNetwork size={18} weight="bold" />
+      </button>
 
       <div
         className={`w-12 shrink-0 text-right font-display text-4xl font-light leading-none tabular-nums sm:text-5xl ${
@@ -150,6 +168,54 @@ function ShareModal({ repos, since, language, onClose }) {
   )
 }
 
+function RepoShareModal({ repo, since, onClose }) {
+  const { t } = useI18n()
+  const cardRef = useRef(null)
+  const [busy, setBusy] = useState(false)
+
+  async function download() {
+    if (!cardRef.current) return
+    setBusy(true)
+    try {
+      const dataUrl = await toPng(cardRef.current, { pixelRatio: 2, cacheBust: true })
+      const a = document.createElement('a')
+      a.download = `github-trending-${repo.owner}-${repo.name}.png`
+      a.href = dataUrl
+      a.click()
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-ink/70 p-4 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div className="flex flex-col items-center gap-4" onClick={(e) => e.stopPropagation()}>
+        <RepoShareCard ref={cardRef} repo={repo} since={since} />
+        <div className="flex gap-3">
+          <button
+            onClick={download}
+            disabled={busy}
+            className="flex items-center gap-2 rounded-sm bg-paper px-5 py-2.5 font-medium text-ink shadow-lg transition hover:bg-paper-2 disabled:opacity-60"
+          >
+            <DownloadSimple size={18} weight="bold" />
+            {busy ? t('generating') : t('download')}
+          </button>
+          <button
+            onClick={onClose}
+            className="flex items-center gap-2 rounded-sm bg-white/10 px-4 py-2.5 font-medium text-paper backdrop-blur transition hover:bg-white/20"
+          >
+            <X size={18} weight="bold" />
+            {t('close')}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function App() {
   const { t, locale } = useI18n()
   const [since, setSince] = useState('daily')
@@ -160,6 +226,7 @@ export default function App() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [sharing, setSharing] = useState(false)
+  const [shareRepo, setShareRepo] = useState(null)
 
   async function load() {
     setLoading(true)
@@ -205,8 +272,6 @@ export default function App() {
             <div>
               <div className="flex items-baseline gap-2.5 font-mono uppercase">
                 <span className="text-sm font-bold tracking-[0.42em] text-vermilion">GitHub</span>
-                <span className="text-muted/50">·</span>
-                <span className="text-[11px] tracking-[0.28em] text-muted">{t('kicker')}</span>
               </div>
               <h1
                 className="-mt-1 font-display text-7xl font-light italic leading-[0.9] tracking-tight text-ink sm:text-8xl"
@@ -237,7 +302,7 @@ export default function App() {
         </header>
 
         {/* ───────────────── Body: feed + ad rail ───────────────── */}
-        <div className="mt-8 grid gap-10 lg:grid-cols-[1fr_300px]">
+        <div className={`mt-8 grid gap-10 ${ADS_VISIBLE ? 'lg:grid-cols-[1fr_300px]' : ''}`}>
           <main>
             {/* controls */}
             <div className="mb-2 flex flex-wrap items-center justify-between gap-4">
@@ -313,25 +378,29 @@ export default function App() {
               ) : (
                 <div>
                   {repos.map((r, i) => (
-                    <RepoRow key={r.fullName} repo={r} index={i} />
+                    <RepoRow key={r.fullName} repo={r} index={i} onShare={setShareRepo} />
                   ))}
                 </div>
               )}
             </div>
 
             {/* in-feed ad fallback for narrow screens (rail is hidden < lg) */}
-            <div className="mt-8 lg:hidden">
-              <AdSlot width={320} height={100} slot="infeed-mobile" />
-            </div>
+            {ADS_VISIBLE && (
+              <div className="mt-8 lg:hidden">
+                <AdSlot width={320} height={100} slot="infeed-mobile" />
+              </div>
+            )}
           </main>
 
           {/* sticky ad rail */}
-          <aside className="hidden lg:block">
-            <div className="sticky top-10 space-y-6">
-              <AdSlot width={300} height={600} slot="rail-halfpage" />
-              <AdSlot width={300} height={250} slot="rail-rectangle" />
-            </div>
-          </aside>
+          {ADS_VISIBLE && (
+            <aside className="hidden lg:block">
+              <div className="sticky top-10 space-y-6">
+                <AdSlot width={300} height={600} slot="rail-halfpage" />
+                <AdSlot width={300} height={250} slot="rail-rectangle" />
+              </div>
+            </aside>
+          )}
         </div>
 
         {/* ───────────────── Editorial content (SEO + readers) ───────────────── */}
@@ -362,7 +431,7 @@ export default function App() {
         </section>
 
         <footer className="mt-14 border-t border-line pt-4 text-center font-mono text-[11px] uppercase tracking-widest text-muted">
-          <nav className="mb-3 flex flex-wrap items-center justify-center gap-x-5 gap-y-1">
+          <nav className="mb-2 flex flex-wrap items-center justify-center gap-x-5 gap-y-1">
             <a href="/about.html" className="transition hover:text-vermilion">
               {t('navAbout')}
             </a>
@@ -373,7 +442,7 @@ export default function App() {
               {t('navContact')}
             </a>
           </nav>
-          {t('footer')}
+          © {new Date().getFullYear()} GitHub Trending Daily
         </footer>
       </div>
 
@@ -384,6 +453,10 @@ export default function App() {
           language={language}
           onClose={() => setSharing(false)}
         />
+      )}
+
+      {shareRepo && (
+        <RepoShareModal repo={shareRepo} since={since} onClose={() => setShareRepo(null)} />
       )}
     </div>
   )
