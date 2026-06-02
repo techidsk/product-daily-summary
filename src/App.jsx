@@ -432,16 +432,16 @@ export default function App() {
 
         <footer className="mt-14 border-t border-line pt-4 text-center font-mono text-[11px] uppercase tracking-widest text-muted">
           <nav className="mb-2 flex flex-wrap items-center justify-center gap-x-5 gap-y-1">
-            <a href="/guide.html" className="transition hover:text-vermilion">
+            <a href="/guide" className="transition hover:text-vermilion">
               {t('navGuide')}
             </a>
-            <a href="/about.html" className="transition hover:text-vermilion">
+            <a href="/about" className="transition hover:text-vermilion">
               {t('navAbout')}
             </a>
-            <a href="/privacy.html" className="transition hover:text-vermilion">
+            <a href="/privacy" className="transition hover:text-vermilion">
               {t('navPrivacy')}
             </a>
-            <a href="/contact.html" className="transition hover:text-vermilion">
+            <a href="/contact" className="transition hover:text-vermilion">
               {t('navContact')}
             </a>
           </nav>

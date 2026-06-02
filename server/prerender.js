@@ -95,10 +95,10 @@ function renderContent({ date, repos }) {
         <ol>${items}
         </ol>
         <nav aria-label="site">
-          <a href="${SITE}/guide.html">Guide</a> ·
-          <a href="${SITE}/about.html">About</a> ·
-          <a href="${SITE}/privacy.html">Privacy</a> ·
-          <a href="${SITE}/contact.html">Contact</a>
+          <a href="${SITE}/guide">Guide</a> ·
+          <a href="${SITE}/about">About</a> ·
+          <a href="${SITE}/privacy">Privacy</a> ·
+          <a href="${SITE}/contact">Contact</a>
         </nav>
         <p>Data from github.com/trending · historical archives from the Internet Archive</p>
       </section>`
