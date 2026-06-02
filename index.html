@@ -1,18 +1,18 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- ──────────────── Primary SEO ──────────────── -->
-    <title>GitHub Trending 每日汇总 · 每日/每周/每月最热开源项目排行</title>
+    <title>GitHub Trending — Daily, Weekly &amp; Monthly Top Open-Source Repos</title>
     <meta
       name="description"
-      content="每天追踪 GitHub Trending 最热门的开源项目，提供每日、每周、每月排行榜，可按编程语言筛选（JavaScript / TypeScript / Python / Go / Rust 等），支持历史归档回看与一键生成分享卡片。Track the hottest trending repositories on GitHub — daily, weekly and monthly rankings with language filters and historical archives."
+      content="Track the hottest trending repositories on GitHub — daily, weekly and monthly rankings with language filters (JavaScript, TypeScript, Python, Go, Rust and more), historical archives you can revisit, and one-click share cards."
     />
     <meta
       name="keywords"
-      content="GitHub Trending, GitHub 热门项目, 开源项目排行, trending repositories, daily trending, 每日开源, GitHub 排行榜, open source ranking, JavaScript trending, Python trending"
+      content="GitHub Trending, trending repositories, daily trending repos, open source ranking, most starred GitHub repos, weekly trending, monthly trending, JavaScript trending, Python trending, Rust trending, trending open source projects"
     />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
     <meta name="author" content="GitHub Trending Daily" />
@@ -21,11 +21,10 @@
     <meta name="application-name" content="Trending" />
     <meta name="apple-mobile-web-app-title" content="Trending" />
 
-    <!-- canonical & language alternates (replace your-domain.com) -->
+    <!-- canonical (replace your-domain.com). Single URL serves all three UI
+         languages client-side, so we don't emit per-language hreflang (that
+         requires distinct URLs); en is the primary indexed language. -->
     <link rel="canonical" href="https://your-domain.com/" />
-    <link rel="alternate" hreflang="zh-CN" href="https://your-domain.com/" />
-    <link rel="alternate" hreflang="en" href="https://your-domain.com/" />
-    <link rel="alternate" hreflang="ja" href="https://your-domain.com/" />
     <link rel="alternate" hreflang="x-default" href="https://your-domain.com/" />
 
     <!-- icons & PWA manifest -->
@@ -38,30 +37,30 @@
     <!-- ──────────────── Open Graph ──────────────── -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="GitHub Trending Daily" />
-    <meta property="og:title" content="GitHub Trending 每日汇总 · 最热开源项目排行" />
+    <meta property="og:title" content="GitHub Trending — Daily, Weekly &amp; Monthly Top Repos" />
     <meta
       property="og:description"
-      content="每天追踪 GitHub 最热门的开源项目：每日 / 每周 / 每月排行，按语言筛选，历史归档可回看。"
+      content="The hottest open-source projects on GitHub, ranked daily / weekly / monthly. Filter by language and revisit archived days."
     />
     <meta property="og:url" content="https://your-domain.com/" />
     <meta property="og:image" content="https://your-domain.com/og.png" />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Trending — 每日 / 每周 / 每月最热开源项目排行" />
-    <meta property="og:locale" content="zh_CN" />
-    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:image:alt" content="Trending — daily, weekly &amp; monthly top open-source repos on GitHub" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="zh_CN" />
     <meta property="og:locale:alternate" content="ja_JP" />
 
     <!-- ──────────────── Twitter ──────────────── -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="GitHub Trending 每日汇总 · 最热开源项目排行" />
+    <meta name="twitter:title" content="GitHub Trending — Daily, Weekly &amp; Monthly Top Repos" />
     <meta
       name="twitter:description"
-      content="每天追踪 GitHub 最热门的开源项目：每日 / 每周 / 每月排行，按语言筛选，历史归档可回看。"
+      content="The hottest open-source projects on GitHub, ranked daily / weekly / monthly. Filter by language and revisit archived days."
     />
     <meta name="twitter:image" content="https://your-domain.com/og.png" />
-    <meta name="twitter:image:alt" content="Trending — 每日 / 每周 / 每月最热开源项目排行" />
+    <meta name="twitter:image:alt" content="Trending — daily, weekly &amp; monthly top open-source repos on GitHub" />
 
     <!-- ──────────────── Structured data ──────────────── -->
     <script type="application/ld+json">
@@ -69,10 +68,10 @@
         "@context": "https://schema.org",
         "@type": "WebSite",
         "name": "GitHub Trending Daily",
-        "alternateName": "GitHub Trending 每日汇总",
+        "alternateName": "Trending — Daily Open-Source Digest",
         "url": "https://your-domain.com/",
-        "description": "每天追踪 GitHub Trending 最热门的开源项目，提供每日、每周、每月排行榜，可按编程语言筛选并回看历史归档。",
-        "inLanguage": ["zh-CN", "en", "ja"]
+        "description": "Track the hottest trending repositories on GitHub — daily, weekly and monthly rankings with language filters and historical archives.",
+        "inLanguage": ["en", "zh-CN", "ja"]
       }
     </script>
     <script type="application/ld+json">
@@ -127,7 +126,7 @@
       <!-- Static fallback for crawlers / no-JS. Replaced by React on load,
            and overwritten with the live ranking by server/prerender.js at build. -->
       <noscript>
-        <p>本站需要 JavaScript 才能显示完整的交互榜单。This site needs JavaScript for the full interactive ranking.</p>
+        <p>This site needs JavaScript for the full interactive ranking of GitHub trending repositories.</p>
       </noscript>
       <!-- prerender:end -->
     </div>

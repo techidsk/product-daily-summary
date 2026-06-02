@@ -83,21 +83,23 @@ function renderContent({ date, repos }) {
 
   return `
       <section aria-label="GitHub Trending daily ranking">
-        <p>每日开源精选 · Daily Open Source</p>
-        <h1>GitHub Trending 每日汇总</h1>
+        <p>Daily Open-Source Digest</p>
+        <h1>GitHub Trending — Daily Ranking</h1>
         <p>
-          每天追踪 GitHub 上最受关注的开源项目，提供每日 / 每周 / 每月排行榜，
-          可按编程语言筛选，并长期归档每一天的榜单。以下是
-          <strong>${esc(date)}</strong> 的每日热门项目（共 ${repos.length} 个）。
+          Track the most popular open-source projects on GitHub with daily,
+          weekly and monthly rankings, filter by programming language, and
+          revisit every day's list from a long-term archive. Below are the
+          trending repositories for <strong>${esc(date)}</strong>
+          (${repos.length} in total).
         </p>
         <ol>${items}
         </ol>
         <nav aria-label="site">
-          <a href="${SITE}/about.html">关于 About</a> ·
-          <a href="${SITE}/privacy.html">隐私政策 Privacy</a> ·
-          <a href="${SITE}/contact.html">联系 Contact</a>
+          <a href="${SITE}/about.html">About</a> ·
+          <a href="${SITE}/privacy.html">Privacy</a> ·
+          <a href="${SITE}/contact.html">Contact</a>
         </nav>
-        <p>数据来自 github.com/trending · 历史归档来自 Internet Archive</p>
+        <p>Data from github.com/trending · historical archives from the Internet Archive</p>
       </section>`
 }
 
@@ -106,7 +108,7 @@ function renderJsonLd({ date, repos }) {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: `GitHub Trending — ${date}`,
-    description: `GitHub 每日最热开源项目排行（${date}）`,
+    description: `The hottest open-source repositories trending on GitHub on ${date}.`,
     numberOfItems: repos.length,
     itemListElement: repos.slice(0, 25).map((r) => ({
       '@type': 'ListItem',
