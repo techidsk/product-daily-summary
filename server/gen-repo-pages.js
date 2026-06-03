@@ -256,7 +256,7 @@ function renderHubPage(list, totalPages) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>All Repositories — GitHub Trending History Archive</title>
     <meta name="description" content="Browse repositories that have appeared on GitHub Trending, ranked by how many days they stayed on the list. Each has a rank-over-time chart and full appearance history." />
-    <link rel="canonical" href="${SITE}/repo" />
+    <link rel="canonical" href="${SITE}/repo/" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <style>${HEAD_STYLE}
       .row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; text-decoration: none; color: inherit; border-top: 1px solid #d8d2c4; padding: .8em 0; }
@@ -333,7 +333,7 @@ function renderHallPage(boards, total) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GitHub Trending Hall of Fame — Most-Trending Repositories</title>
     <meta name="description" content="The all-time leaderboards of GitHub Trending, built from this site's archive: repositories that stayed on the list the most days, posted the biggest single-day star gains, and reached the highest star counts." />
-    <link rel="canonical" href="${SITE}/hall-of-fame" />
+    <link rel="canonical" href="${SITE}/hall-of-fame/" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <style>${HEAD_STYLE}
       ol.board { list-style: none; counter-reset: r; padding: 0; margin: .5em 0 0; }
