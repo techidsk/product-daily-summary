@@ -96,6 +96,7 @@ function renderContent({ date, repos }) {
         </ol>
         <nav aria-label="site">
           <a href="${SITE}/repo">All repos</a> ·
+          <a href="${SITE}/hall-of-fame">Hall of Fame</a> ·
           <a href="${SITE}/learn">Learn</a> ·
           <a href="${SITE}/guide">Guide</a> ·
           <a href="${SITE}/about">About</a> ·

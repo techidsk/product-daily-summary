@@ -126,6 +126,7 @@ const NAV = `
       <nav>
         <a href="/">← Home</a>
         <a href="/repo">All repos</a>
+        <a href="/hall-of-fame">Hall of Fame</a>
         <a href="/learn">Learn</a>
         <a href="/guide">Guide</a>
         <a href="/about">About</a>
@@ -306,6 +307,67 @@ ${urls}
 `
 }
 
+function renderHallPage(boards, total) {
+  const sections = boards
+    .map(
+      (b) => `
+      <h2>${esc(b.title)}</h2>
+      <p class="board-note">${esc(b.note)}</p>
+      <ol class="board">
+        ${b.rows
+          .map(
+            (row) => `<li>
+          <a href="/repo/${row.owner}/${row.name}"><span class="owner">${esc(row.owner)}/</span>${esc(row.name)}</a>
+          <span class="val">${row.value}</span>
+        </li>`,
+          )
+          .join('\n        ')}
+      </ol>`,
+    )
+    .join('\n')
+
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GitHub Trending Hall of Fame — Most-Trending Repositories</title>
+    <meta name="description" content="The all-time leaderboards of GitHub Trending, built from this site's archive: repositories that stayed on the list the most days, posted the biggest single-day star gains, and reached the highest star counts." />
+    <link rel="canonical" href="${SITE}/hall-of-fame" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>${HEAD_STYLE}
+      ol.board { list-style: none; counter-reset: r; padding: 0; margin: .5em 0 0; }
+      ol.board li { counter-increment: r; display: flex; justify-content: space-between; align-items: baseline; gap: 14px; border-top: 1px solid #d8d2c4; padding: .55em 0; }
+      ol.board li::before { content: counter(r); font-family: ui-monospace, monospace; font-size: .8rem; color: #8a8a8a; width: 1.8em; flex: none; }
+      ol.board a { flex: 1; font-family: ui-monospace, monospace; font-size: .95rem; text-decoration: none; word-break: break-word; }
+      ol.board a:hover { color: #c02a22; }
+      ol.board .owner { color: #8a8a8a; }
+      ol.board .val { font-family: ui-monospace, monospace; font-size: .82rem; color: #1a1a1a; white-space: nowrap; }
+      .board-note { color: #6b6b6b; font-size: .92rem; margin: .2em 0 0; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">${NAV}
+
+      <p class="kicker">Hall of Fame</p>
+      <h1>GitHub Trending Hall of Fame</h1>
+      <p class="lead">
+        All-time leaderboards compiled from this site's archive of GitHub's daily Trending ranking. These are the
+        repositories that left the deepest mark — by staying power, by explosive single-day growth, and by sheer
+        scale. Drawn from ${total.toLocaleString('en-US')} repositories with a trending history.
+      </p>
+      ${sections}
+      <footer>
+        Data from github.com/trending · historical archives from the Internet Archive · not affiliated with GitHub<br />
+        <a href="/" style="color:#8a8a8a;">Back to home</a> ·
+        <a href="/repo" style="color:#8a8a8a;">All repos</a>
+      </footer>
+    </div>
+  </body>
+</html>
+`
+}
+
 async function main() {
   if (!url || !key) {
     console.warn('[repo-pages] VITE_SUPABASE_URL / KEY not set — skipping.')
@@ -372,6 +434,7 @@ async function main() {
       peakDate: peak.date,
       latestStars: series[series.length - 1].stars,
       maxStars: Math.max(...series.map((s) => s.stars)),
+      maxGain: Math.max(...series.map((s) => s.periodStars)),
     }
     eligible.push({
       owner,
@@ -419,6 +482,42 @@ async function main() {
     'utf8',
   )
   await writeFile(path.join(DIST_DIR, 'sitemap-repos.xml'), renderSitemap(pages), 'utf8')
+
+  // Hall of Fame — leaderboards drawn from repos that have a page (so every row
+  // links to a real /repo page). Top 50 each.
+  const board = (rows, value) => rows.map((r) => ({ owner: r.owner, name: r.name, value: value(r) }))
+  const boards = [
+    {
+      title: 'Most days on Trending',
+      note: 'Repositories that held a spot on the daily ranking the most days — the truest test of staying power.',
+      rows: board(
+        [...pages].sort((a, b) => b.stats.days - a.stats.days).slice(0, 50),
+        (r) => `${r.stats.days} days`,
+      ),
+    },
+    {
+      title: 'Biggest single-day star gain',
+      note: 'The largest number of stars a repository picked up on a single archived day.',
+      rows: board(
+        [...pages].sort((a, b) => b.stats.maxGain - a.stats.maxGain).slice(0, 50),
+        (r) => `+${fmtNum(r.stats.maxGain)} in a day`,
+      ),
+    },
+    {
+      title: 'Most stars',
+      note: 'The highest star count reached while the repository was on the ranking.',
+      rows: board(
+        [...pages].sort((a, b) => b.stats.maxStars - a.stats.maxStars).slice(0, 50),
+        (r) => `${fmtNum(r.stats.maxStars)} stars`,
+      ),
+    },
+  ]
+  await mkdir(path.join(DIST_DIR, 'hall-of-fame'), { recursive: true })
+  await writeFile(
+    path.join(DIST_DIR, 'hall-of-fame', 'index.html'),
+    renderHallPage(boards, pages.length),
+    'utf8',
+  )
 
   console.log(
     `[repo-pages] Wrote ${written} repo pages (of ${eligible.length} eligible, ` +
