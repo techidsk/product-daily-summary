@@ -10,3 +10,4 @@ User-agent: AdsBot-Google
 Allow: /
 
 Sitemap: https://trending.magikaru.com/sitemap.xml
+Sitemap: https://trending.magikaru.com/sitemap-repos.xml
