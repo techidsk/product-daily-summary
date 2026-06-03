@@ -36,18 +36,49 @@ async function reposForSnapshot(snapshotId) {
   return mapRows(data)
 }
 
+// Lightweight rank lookup for a snapshot: Map<fullName, rank>. Used to diff a
+// ranking against the previous snapshot for the ▲/▼/NEW markers.
+async function ranksForSnapshot(snapshotId) {
+  const { data, error } = await supabase
+    .from('rankings')
+    .select('rank, repos!inner(full_name)')
+    .eq('snapshot_id', snapshotId)
+  if (error) return null
+  return new Map((data || []).map((row) => [row.repos.full_name, row.rank]))
+}
+
+// Annotate each repo with movement vs the previous snapshot:
+//   rankDelta = prevRank - rank  (positive = climbed; null = no comparison)
+//   isNew     = present now but absent from the previous snapshot
+// With no previous snapshot (prev = null), markers are suppressed entirely so a
+// first-ever archived day doesn't render a wall of "NEW".
+function annotateDeltas(current, prev) {
+  if (!prev) return current.map((r) => ({ ...r, rankDelta: null, isNew: false }))
+  return current.map((r) => {
+    const prevRank = prev.get(r.fullName)
+    return {
+      ...r,
+      rankDelta: prevRank === undefined ? null : prevRank - r.rank,
+      isNew: prevRank === undefined,
+    }
+  })
+}
+
 export async function fetchTrending(since, language = '') {
   ensure()
+  // Pull the two most recent snapshots so we can diff current vs previous.
   const { data: snaps, error } = await supabase
     .from('snapshots')
     .select('id')
     .eq('period', since)
     .eq('lang_filter', language)
     .order('captured_at', { ascending: false })
-    .limit(1)
+    .limit(2)
   if (error) throw new Error(error.message)
   if (!snaps?.length) return []
-  return reposForSnapshot(snaps[0].id)
+  const current = await reposForSnapshot(snaps[0].id)
+  const prev = snaps[1] ? await ranksForSnapshot(snaps[1].id) : null
+  return annotateDeltas(current, prev)
 }
 
 export async function fetchHistoryDates(since, language = '') {
@@ -73,5 +104,18 @@ export async function fetchHistory(date, since, language = '') {
     .limit(1)
   if (error) throw new Error(error.message)
   if (!snaps?.length) return []
-  return reposForSnapshot(snaps[0].id)
+
+  // Previous archived day for the same period/language (dates can have gaps).
+  const { data: prevSnaps } = await supabase
+    .from('snapshots')
+    .select('id')
+    .eq('period', since)
+    .eq('lang_filter', language)
+    .lt('captured_date', date)
+    .order('captured_date', { ascending: false })
+    .limit(1)
+
+  const current = await reposForSnapshot(snaps[0].id)
+  const prev = prevSnaps?.length ? await ranksForSnapshot(prevSnaps[0].id) : null
+  return annotateDeltas(current, prev)
 }

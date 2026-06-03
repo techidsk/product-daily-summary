@@ -52,6 +52,8 @@ const translations = {
     faqQ5: '星标（star）和 Fork 数字代表什么？',
     faqA5:
       '星标是收藏与关注度的累计票数；真正决定排名的是「周期内新增星标」（如「今日 +N」）这一增速指标。Fork 是他人复制仓库以便修改或贡献，Fork 占比高往往说明项目正被实际使用，而不只是被收藏。',
+    badgeNew: '新',
+    badgeNewTip: '较上一份榜单新上榜',
     navRepos: '仓库',
     navLearn: '学习',
     navGuide: '指南',
@@ -102,6 +104,8 @@ const translations = {
     faqQ5: 'What do the star and fork numbers mean?',
     faqA5:
       'Stars are a cumulative measure of interest; the ranking is actually driven by the stars gained within the period (the “+N today” figure). A fork is someone’s copy of a repo for modifying or contributing, so a high fork ratio often means a project is being actively used, not just bookmarked.',
+    badgeNew: 'New',
+    badgeNewTip: 'New on the list since the previous snapshot',
     navRepos: 'All repos',
     navLearn: 'Learn',
     navGuide: 'Guide',
@@ -152,6 +156,8 @@ const translations = {
     faqQ5: 'スター数とフォーク数は何を意味しますか？',
     faqA5:
       'スターは関心の累計です。ランキングを実際に左右するのは期間内に増えたスター（「本日 +N」）という増加量です。フォークは改変や貢献のためのコピーで、フォーク比率が高い場合は、単なるブックマークではなく実際に使われていることを示します。',
+    badgeNew: '新',
+    badgeNewTip: '前回のランキングから新規ランクイン',
     navRepos: 'リポジトリ',
     navLearn: '学ぶ',
     navGuide: 'ガイド',

@@ -39,6 +39,29 @@ function formatNum(n) {
   return String(n)
 }
 
+function RankBadge({ repo }) {
+  const { t } = useI18n()
+  if (repo.isNew) {
+    return (
+      <span
+        title={t('badgeNewTip')}
+        className="inline-block rounded-sm bg-vermilion px-1 py-0.5 text-[9px] font-bold uppercase tracking-wider text-paper"
+      >
+        {t('badgeNew')}
+      </span>
+    )
+  }
+  if (repo.rankDelta == null) return null
+  if (repo.rankDelta === 0) return <span className="text-muted/60">–</span>
+  const up = repo.rankDelta > 0
+  return (
+    <span className={up ? 'text-leaf' : 'text-muted'}>
+      {up ? '▲' : '▼'}
+      {Math.abs(repo.rankDelta)}
+    </span>
+  )
+}
+
 function RepoRow({ repo, onShare }) {
   const { t } = useI18n()
   const top = repo.rank <= 3
@@ -67,12 +90,17 @@ function RepoRow({ repo, onShare }) {
         <ShareNetwork size={18} weight="bold" />
       </button>
 
-      <div
-        className={`w-12 shrink-0 text-right font-display text-4xl font-light leading-none tabular-nums sm:text-5xl ${
-          top ? 'text-vermilion' : 'text-muted/70'
-        }`}
-      >
-        {String(repo.rank).padStart(2, '0')}
+      <div className="w-12 shrink-0 text-right">
+        <div
+          className={`font-display text-4xl font-light leading-none tabular-nums sm:text-5xl ${
+            top ? 'text-vermilion' : 'text-muted/70'
+          }`}
+        >
+          {String(repo.rank).padStart(2, '0')}
+        </div>
+        <div className="mt-1.5 font-mono text-[10px] font-medium leading-none">
+          <RankBadge repo={repo} />
+        </div>
       </div>
 
       <div className="min-w-0 flex-1">
