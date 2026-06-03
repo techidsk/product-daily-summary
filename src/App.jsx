@@ -147,6 +147,65 @@ function RepoRow({ repo, onShare }) {
   )
 }
 
+// Surfaces the rank-movement data (computed for the markers) at the top of the
+// feed: the biggest climbers and the new entries this snapshot. Derived purely
+// from the already-loaded repos — no extra fetch. Hidden when there is nothing
+// to show (e.g. no previous snapshot to diff against).
+function MoversStrip({ repos }) {
+  const { t } = useI18n()
+  const climbers = repos
+    .filter((r) => r.rankDelta > 0)
+    .sort((a, b) => b.rankDelta - a.rankDelta)
+    .slice(0, 3)
+  const newcomers = repos.filter((r) => r.isNew).slice(0, 3)
+  if (climbers.length === 0 && newcomers.length === 0) return null
+
+  const Item = ({ repo, marker, markerClass }) => (
+    <a
+      href={repo.url}
+      target="_blank"
+      rel="noreferrer"
+      title={repo.fullName}
+      className="group flex items-baseline gap-2 truncate"
+    >
+      <span className={`shrink-0 font-mono text-xs font-semibold ${markerClass}`}>{marker}</span>
+      <span className="truncate font-mono text-xs text-ink-soft transition group-hover:text-vermilion">
+        <span className="text-muted">{repo.owner}/</span>
+        {repo.name}
+      </span>
+    </a>
+  )
+
+  return (
+    <div className="mb-5 grid gap-x-8 gap-y-4 border-y border-line bg-paper-2/40 px-4 py-3 sm:grid-cols-2">
+      {climbers.length > 0 && (
+        <div>
+          <div className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-muted">
+            {t('moversClimbers')}
+          </div>
+          <div className="space-y-1">
+            {climbers.map((r) => (
+              <Item key={r.fullName} repo={r} marker={`▲${r.rankDelta}`} markerClass="text-leaf" />
+            ))}
+          </div>
+        </div>
+      )}
+      {newcomers.length > 0 && (
+        <div>
+          <div className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-muted">
+            {t('moversNew')}
+          </div>
+          <div className="space-y-1">
+            {newcomers.map((r) => (
+              <Item key={r.fullName} repo={r} marker={t('badgeNew')} markerClass="text-vermilion" />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 function ShareModal({ repos, since, language, onClose }) {
   const { t } = useI18n()
   const cardRef = useRef(null)
@@ -404,6 +463,7 @@ export default function App() {
                 <div className="py-24 text-center font-mono text-sm text-muted">{t('empty')}</div>
               ) : (
                 <div>
+                  <MoversStrip repos={repos} />
                   {repos.map((r) => (
                     <RepoRow key={r.fullName} repo={r} onShare={setShareRepo} />
                   ))}
