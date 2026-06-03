@@ -70,5 +70,10 @@
 - **部署**:push 到 `origin/main` → Cloudflare Pages 自动构建。构建会跑 prerender + 生成 ~900 repo 页,耗时略长属正常。
 - **环境变量**:Cloudflare Pages 需配 `VITE_SUPABASE_URL` / `VITE_SUPABASE_PUBLISHABLE_KEY`,否则 prerender / gen-repo-pages / gen-feed 会安全跳过(不报错,但无数据页)。
 - **AdSense**:上线验证脚本 + `ads.txt` 后,去 AdSense「网站」提交审核;若以"内容不足"被拒,优先推进 Backlog #1(AI 摘要 / 复盘)再重申。
+- **根域名 `magikaru.com` 跳转**(2026-06-04 起):AdSense 认顶级域名,但 apex 原本完全未配置(打不开)。已用一个 Cloudflare Worker 把 `magikaru.com/*` 301 跳到 `trending.magikaru.com/*`(保留 path+query),让根域名可爬 + `magikaru.com/ads.txt` 可达。
+  - Worker 源码在 `C:\Code\apex-redirect\`(`worker.js` + `wrangler.toml`),名为 `magikaru-apex-redirect`,通过 **Custom Domain** 绑定 apex(自动建 DNS + 证书)。改完跑 `npx wrangler deploy` 重新部署。
+  - **`magikaru.com/ads.txt` 由该 Worker 直接返回 200**(不走跳转,因为 AdSense 爬虫常不跟跨主机跳转)。⚠️ ads.txt 内容现在共 **3 处**,换 AdSense ID / 加广告联盟时三处都要改:① trending 站 `public/ads.txt` ② 构建产物 `dist/ads.txt`(由 build 生成)③ **apex Worker `C:\Code\apex-redirect\worker.js` 里的 `ADS_TXT` 常量**(别漏这处!)。
+  - **以后想用主域名做别的**:在 `C:\Code\apex-redirect\` 跑 `npx wrangler delete`(或后台删掉该 Worker / 其 Custom Domain),apex 即释放;然后把根域名指向你的新站即可。AdSense 资格仍在(覆盖整个域名,含所有子域名)。
+  - 只需长期保留:① AdSense 所有权验证的 DNS TXT(无害);② 根域名能访问到 `ads.txt` 那一行(跳转或新站任一方式满足即可)。
 - **文件数上限**:Cloudflare Pages 单次部署约 2 万文件;`gen-repo-pages.js` 已设 `MAX_PAGES=8000`,接近时再调或分页 sitemap。
 - 所有构建期脚本都**失败安全**(无 env / 抓取失败 → 警告 + exit 0,绝不让构建中断)。
