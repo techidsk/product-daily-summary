@@ -132,9 +132,18 @@
       }
     </script>
 
-    <!-- Google AdSense is loaded at runtime by src/lib/ads.js, gated on the
-         VITE_ADSENSE_CLIENT env var. No script runs until that id is set, so
-         there is nothing to edit here. See .env.example for the AdSense vars. -->
+    <!-- Google AdSense loader. Hard-coded in <head> so it is present for the
+         AdSense site review / Auto Ads even before any manual ad units exist
+         (those need slot ids, which only exist after approval). The
+         data-adsbygoogle marker lets src/lib/ads.js#ensureAdsenseScript detect
+         this tag and skip injecting a duplicate loader once the per-unit
+         VITE_ADSENSE_SLOT_* env vars are configured post-approval. -->
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1476592629109289"
+      crossorigin="anonymous"
+      data-adsbygoogle="1"
+    ></script>
   </head>
   <body>
     <div id="root">

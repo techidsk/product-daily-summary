@@ -4,6 +4,4 @@
 # For extra safety you can also place the same line at the root domain
 # (https://magikaru.com/ads.txt) — some crawlers check the root for subdomains.
 #
-# Replace pub-XXXXXXXXXXXXXXXX with your AdSense publisher ID (Account → Settings),
-# then uncomment the line below. Until then this file is harmless.
-# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+google.com, pub-1476592629109289, DIRECT, f08c47fec0942fa0
