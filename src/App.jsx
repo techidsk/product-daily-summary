@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { toPng } from 'html-to-image'
 import {
   Star,
@@ -277,6 +277,23 @@ function OnThisDay() {
   )
 }
 
+// The share cards render at a fixed 480px so the exported PNG is crisp and
+// consistent. On phones narrower than that the preview would overflow the
+// modal, so we shrink it with CSS `zoom` to fit the viewport. zoom scales the
+// layout box too (unlike transform), keeping the card centred and the buttons
+// snug beneath it. The ref'd card itself stays 480px, so toPng output is
+// unaffected.
+function FitToViewport({ width, children }) {
+  const [scale, setScale] = useState(1)
+  useLayoutEffect(() => {
+    const compute = () => setScale(Math.min(1, (window.innerWidth - 32) / width))
+    compute()
+    window.addEventListener('resize', compute)
+    return () => window.removeEventListener('resize', compute)
+  }, [width])
+  return <div style={{ zoom: scale }}>{children}</div>
+}
+
 function ShareModal({ repos, since, language, onClose }) {
   const { t } = useI18n()
   const cardRef = useRef(null)
@@ -302,7 +319,9 @@ function ShareModal({ repos, since, language, onClose }) {
       onClick={onClose}
     >
       <div className="flex flex-col items-center gap-4" onClick={(e) => e.stopPropagation()}>
-        <ShareCard ref={cardRef} repos={repos} since={since} language={language} />
+        <FitToViewport width={480}>
+          <ShareCard ref={cardRef} repos={repos} since={since} language={language} />
+        </FitToViewport>
         <div className="flex gap-3">
           <button
             onClick={download}
@@ -350,7 +369,9 @@ function RepoShareModal({ repo, since, onClose }) {
       onClick={onClose}
     >
       <div className="flex flex-col items-center gap-4" onClick={(e) => e.stopPropagation()}>
-        <RepoShareCard ref={cardRef} repo={repo} since={since} />
+        <FitToViewport width={480}>
+          <RepoShareCard ref={cardRef} repo={repo} since={since} />
+        </FitToViewport>
         <div className="flex gap-3">
           <button
             onClick={download}
