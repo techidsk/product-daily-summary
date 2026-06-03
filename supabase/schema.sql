@@ -1,7 +1,7 @@
 -- GitHub Trending 持久化 schema (Supabase Postgres)
--- 在 Supabase 控制台 → SQL Editor 里整段执行即可。
--- 服务端用 service_role key 访问（绕过 RLS）；这里仍开启 RLS 并默认无公开策略，
--- 以防 anon key 误读。前端通过 /api 走服务端读取，不直连数据库。
+-- 在 Supabase 控制台 → SQL Editor 里整段执行即可（或 `npm run db:push`）。
+-- 写入走服务端直连 Postgres（DATABASE_URL，绕过 RLS）。
+-- 读取：前端用 publishable/anon key 直读这三张表（RLS 开启 + 下方 anon select 策略放开）。
 
 -- ── 仓库（按 full_name 去重，跨快照复用）──────────────────────────
 create table if not exists public.repos (
