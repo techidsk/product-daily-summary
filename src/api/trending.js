@@ -119,3 +119,24 @@ export async function fetchHistory(date, since, language = '') {
   const prev = prevSnaps?.length ? await ranksForSnapshot(prevSnaps[0].id) : null
   return annotateDeltas(current, prev)
 }
+
+// Top N repos for one exact day (daily / all-languages). Used by the "On This
+// Day" widget. Returns [] if that day has no snapshot.
+export async function fetchDayTop(date, limit = 5) {
+  if (!supabase) return []
+  const { data: snaps } = await supabase
+    .from('snapshots')
+    .select('id')
+    .eq('captured_date', date)
+    .eq('period', 'daily')
+    .eq('lang_filter', '')
+    .limit(1)
+  if (!snaps?.length) return []
+  const { data } = await supabase
+    .from('rankings')
+    .select(RANKING_SELECT)
+    .eq('snapshot_id', snaps[0].id)
+    .order('rank')
+    .limit(limit)
+  return mapRows(data)
+}

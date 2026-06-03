@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node server/prerender.js && node server/gen-repo-pages.js",
+    "build": "vite build && node server/prerender.js && node server/gen-repo-pages.js && node server/gen-feed.js",
     "preview": "vite preview",
     "db:push": "node --env-file-if-exists=.env server/db-push.js",
     "ingest": "node --env-file-if-exists=.env server/ingest-all.js",

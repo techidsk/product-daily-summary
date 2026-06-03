@@ -8,7 +8,7 @@ import {
   X,
   ArrowsClockwise,
 } from '@phosphor-icons/react'
-import { fetchTrending, fetchHistory, fetchHistoryDates } from './api/trending.js'
+import { fetchTrending, fetchHistory, fetchHistoryDates, fetchDayTop } from './api/trending.js'
 import { useI18n } from './i18n.jsx'
 import ShareCard from './components/ShareCard.jsx'
 import RepoShareCard from './components/RepoShareCard.jsx'
@@ -203,6 +203,77 @@ function MoversStrip({ repos }) {
         </div>
       )}
     </div>
+  )
+}
+
+// "On This Day": looks back at the daily / all-languages ranking one month and
+// one year ago, independent of the current filters. Fetches its own data once on
+// mount; any block with no archived snapshot for that exact date is dropped.
+function OnThisDay() {
+  const { t } = useI18n()
+  const [blocks, setBlocks] = useState([])
+
+  useEffect(() => {
+    const fmt = (d) =>
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+    const today = new Date()
+    const monthAgo = new Date(today)
+    monthAgo.setMonth(today.getMonth() - 1)
+    const yearAgo = new Date(today)
+    yearAgo.setFullYear(today.getFullYear() - 1)
+    const targets = [
+      { key: 'month', label: 'otdMonthAgo', date: fmt(monthAgo) },
+      { key: 'year', label: 'otdYearAgo', date: fmt(yearAgo) },
+    ]
+    let alive = true
+    Promise.all(targets.map(async (tg) => ({ ...tg, repos: await fetchDayTop(tg.date, 5) })))
+      .then((r) => alive && setBlocks(r.filter((b) => b.repos.length > 0)))
+      .catch(() => {})
+    return () => {
+      alive = false
+    }
+  }, [])
+
+  if (blocks.length === 0) return null
+  return (
+    <section className="mt-16 border-t border-line pt-10">
+      <h2 className="font-display text-2xl font-semibold tracking-tight text-ink">{t('onThisDay')}</h2>
+      <div className="mt-5 grid gap-10 md:grid-cols-2">
+        {blocks.map((b) => (
+          <div key={b.key}>
+            <div className="mb-3 flex items-baseline justify-between font-mono text-[11px] uppercase tracking-widest text-muted">
+              <span>{t(b.label)}</span>
+              <span>{b.date}</span>
+            </div>
+            <ol className="space-y-2">
+              {b.repos.map((r) => (
+                <li key={r.fullName}>
+                  <a
+                    href={r.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="group flex items-baseline gap-3"
+                  >
+                    <span className="w-5 shrink-0 text-right font-display text-lg font-light text-muted/70">
+                      {r.rank}
+                    </span>
+                    <span className="min-w-0 flex-1 truncate font-mono text-sm text-ink-soft transition group-hover:text-vermilion">
+                      <span className="text-muted">{r.owner}/</span>
+                      {r.name}
+                    </span>
+                    {r.periodStars > 0 && (
+                      <span className="shrink-0 font-display text-sm text-vermilion">
+                        +{formatNum(r.periodStars)}
+                      </span>
+                    )}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </div>
+        ))}
+      </div>
+    </section>
   )
 }
 
@@ -489,6 +560,8 @@ export default function App() {
             </aside>
           )}
         </div>
+
+        <OnThisDay />
 
         {/* ───────────────── Editorial content (SEO + readers) ───────────────── */}
         <section className="mt-16 grid gap-10 border-t border-line pt-10 md:grid-cols-2">
