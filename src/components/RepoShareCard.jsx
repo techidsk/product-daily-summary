@@ -1,5 +1,6 @@
 import { forwardRef } from 'react'
 import { useI18n } from '../i18n.jsx'
+import { SITE_DOMAIN } from '../lib/share.js'
 
 function formatNum(n) {
   if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'k'
@@ -59,7 +60,7 @@ const RepoShareCard = forwardRef(function RepoShareCard({ repo, since }, ref) {
 
       <div className="mt-5 border-t border-line pt-2 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.25em] text-muted">
         <span>{dateStr}</span>
-        <span>{t('cardFooter')}</span>
+        <span className="text-vermilion">{SITE_DOMAIN}</span>
       </div>
     </div>
   )

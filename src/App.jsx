@@ -1,21 +1,21 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { toPng } from 'html-to-image'
-import {
-  Star,
-  GitFork,
-  ShareNetwork,
-  DownloadSimple,
-  X,
-  ArrowsClockwise,
-} from '@phosphor-icons/react'
+import { lazy, Suspense, useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { Star, GitFork, ShareNetwork, ArrowsClockwise } from '@phosphor-icons/react'
 import { fetchTrending, fetchHistory, fetchHistoryDates, fetchDayTop } from './api/trending.js'
 import { useI18n } from './i18n.jsx'
-import ShareCard from './components/ShareCard.jsx'
-import RepoShareCard from './components/RepoShareCard.jsx'
 import LanguageSwitcher from './components/LanguageSwitcher.jsx'
 import AdSlot from './components/AdSlot.jsx'
 import Calendar from './components/Calendar.jsx'
 import { ADS_VISIBLE } from './lib/ads.js'
+
+// Share modals pull in html-to-image + the share cards — only needed once the
+// user clicks Share, so they load on demand as a separate chunk.
+const ShareModal = lazy(() =>
+  import('./components/ShareModals.jsx').then((m) => ({ default: m.ShareModal })),
+)
+const RepoShareModal = lazy(() =>
+  import('./components/ShareModals.jsx').then((m) => ({ default: m.RepoShareModal })),
+)
 
 const PERIODS = [
   { key: 'daily', tk: 'periodDaily' },
@@ -211,28 +211,27 @@ function MoversStrip({ repos }) {
 // mount; any block with no archived snapshot for that exact date is dropped.
 function OnThisDay() {
   const { t } = useI18n()
-  const [blocks, setBlocks] = useState([])
 
-  useEffect(() => {
-    const fmt = (d) =>
-      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
-    const today = new Date()
-    const monthAgo = new Date(today)
-    monthAgo.setMonth(today.getMonth() - 1)
-    const yearAgo = new Date(today)
-    yearAgo.setFullYear(today.getFullYear() - 1)
-    const targets = [
-      { key: 'month', label: 'otdMonthAgo', date: fmt(monthAgo) },
-      { key: 'year', label: 'otdYearAgo', date: fmt(yearAgo) },
-    ]
-    let alive = true
-    Promise.all(targets.map(async (tg) => ({ ...tg, repos: await fetchDayTop(tg.date, 5) })))
-      .then((r) => alive && setBlocks(r.filter((b) => b.repos.length > 0)))
-      .catch(() => {})
-    return () => {
-      alive = false
-    }
-  }, [])
+  const { data: blocks = [] } = useQuery({
+    queryKey: ['onThisDay'],
+    queryFn: async () => {
+      const fmt = (d) =>
+        `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+      const today = new Date()
+      const monthAgo = new Date(today)
+      monthAgo.setMonth(today.getMonth() - 1)
+      const yearAgo = new Date(today)
+      yearAgo.setFullYear(today.getFullYear() - 1)
+      const targets = [
+        { key: 'month', label: 'otdMonthAgo', date: fmt(monthAgo) },
+        { key: 'year', label: 'otdYearAgo', date: fmt(yearAgo) },
+      ]
+      const r = await Promise.all(
+        targets.map(async (tg) => ({ ...tg, repos: await fetchDayTop(tg.date, 5) })),
+      )
+      return r.filter((b) => b.repos.length > 0)
+    },
+  })
 
   if (blocks.length === 0) return null
   return (
@@ -277,161 +276,39 @@ function OnThisDay() {
   )
 }
 
-// The share cards render at a fixed 480px so the exported PNG is crisp and
-// consistent. On phones narrower than that the preview would overflow the
-// modal, so we shrink it with CSS `zoom` to fit the viewport. zoom scales the
-// layout box too (unlike transform), keeping the card centred and the buttons
-// snug beneath it. The ref'd card itself stays 480px, so toPng output is
-// unaffected.
-function FitToViewport({ width, children }) {
-  const [scale, setScale] = useState(1)
-  useLayoutEffect(() => {
-    const compute = () => setScale(Math.min(1, (window.innerWidth - 32) / width))
-    compute()
-    window.addEventListener('resize', compute)
-    return () => window.removeEventListener('resize', compute)
-  }, [width])
-  return <div style={{ zoom: scale }}>{children}</div>
-}
-
-function ShareModal({ repos, since, language, onClose }) {
-  const { t } = useI18n()
-  const cardRef = useRef(null)
-  const [busy, setBusy] = useState(false)
-
-  async function download() {
-    if (!cardRef.current) return
-    setBusy(true)
-    try {
-      const dataUrl = await toPng(cardRef.current, { pixelRatio: 2, cacheBust: true })
-      const a = document.createElement('a')
-      a.download = `github-trending-${since}.png`
-      a.href = dataUrl
-      a.click()
-    } finally {
-      setBusy(false)
-    }
-  }
-
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-ink/70 p-4 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      <div className="flex flex-col items-center gap-4" onClick={(e) => e.stopPropagation()}>
-        <FitToViewport width={480}>
-          <ShareCard ref={cardRef} repos={repos} since={since} language={language} />
-        </FitToViewport>
-        <div className="flex gap-3">
-          <button
-            onClick={download}
-            disabled={busy}
-            className="flex items-center gap-2 rounded-sm bg-paper px-5 py-2.5 font-medium text-ink shadow-lg transition hover:bg-paper-2 disabled:opacity-60"
-          >
-            <DownloadSimple size={18} weight="bold" />
-            {busy ? t('generating') : t('download')}
-          </button>
-          <button
-            onClick={onClose}
-            className="flex items-center gap-2 rounded-sm bg-white/10 px-4 py-2.5 font-medium text-paper backdrop-blur transition hover:bg-white/20"
-          >
-            <X size={18} weight="bold" />
-            {t('close')}
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function RepoShareModal({ repo, since, onClose }) {
-  const { t } = useI18n()
-  const cardRef = useRef(null)
-  const [busy, setBusy] = useState(false)
-
-  async function download() {
-    if (!cardRef.current) return
-    setBusy(true)
-    try {
-      const dataUrl = await toPng(cardRef.current, { pixelRatio: 2, cacheBust: true })
-      const a = document.createElement('a')
-      a.download = `github-trending-${repo.owner}-${repo.name}.png`
-      a.href = dataUrl
-      a.click()
-    } finally {
-      setBusy(false)
-    }
-  }
-
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-ink/70 p-4 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      <div className="flex flex-col items-center gap-4" onClick={(e) => e.stopPropagation()}>
-        <FitToViewport width={480}>
-          <RepoShareCard ref={cardRef} repo={repo} since={since} />
-        </FitToViewport>
-        <div className="flex gap-3">
-          <button
-            onClick={download}
-            disabled={busy}
-            className="flex items-center gap-2 rounded-sm bg-paper px-5 py-2.5 font-medium text-ink shadow-lg transition hover:bg-paper-2 disabled:opacity-60"
-          >
-            <DownloadSimple size={18} weight="bold" />
-            {busy ? t('generating') : t('download')}
-          </button>
-          <button
-            onClick={onClose}
-            className="flex items-center gap-2 rounded-sm bg-white/10 px-4 py-2.5 font-medium text-paper backdrop-blur transition hover:bg-white/20"
-          >
-            <X size={18} weight="bold" />
-            {t('close')}
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 export default function App() {
   const { t, locale } = useI18n()
   const [since, setSince] = useState('daily')
   const [language, setLanguage] = useState('')
   const [archiveDate, setArchiveDate] = useState('') // '' = latest/live
-  const [dates, setDates] = useState([])
-  const [repos, setRepos] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
   const [sharing, setSharing] = useState(false)
   const [shareRepo, setShareRepo] = useState(null)
 
-  async function load() {
-    setLoading(true)
-    setError(null)
-    try {
-      setRepos(
-        archiveDate
-          ? await fetchHistory(archiveDate, since, language)
-          : await fetchTrending(since, language),
-      )
-    } catch (e) {
-      setError(e.message)
-      setRepos([])
-    } finally {
-      setLoading(false)
-    }
-  }
+  // Main feed. React Query caches per (period, language, date), so revisiting a
+  // previously loaded view is instant and only refetches once data goes stale.
+  const {
+    data: repos = [],
+    isLoading: loading,
+    isFetching,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ['trending', since, language, archiveDate],
+    queryFn: () =>
+      archiveDate
+        ? fetchHistory(archiveDate, since, language)
+        : fetchTrending(since, language),
+  })
 
-  useEffect(() => {
-    load()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [since, language, archiveDate])
+  // Available archive dates for the current period/language.
+  const { data: dates = [] } = useQuery({
+    queryKey: ['historyDates', since, language],
+    queryFn: () => fetchHistoryDates(since, language),
+  })
 
-  // Refresh the archive date list when period/language changes; default to live.
+  // Switching period/language clears the selected archive date (back to live).
   useEffect(() => {
     setArchiveDate('')
-    fetchHistoryDates(since, language).then(setDates).catch(() => setDates([]))
   }, [since, language])
 
   const dateline = new Date().toLocaleDateString(locale, {
@@ -524,12 +401,12 @@ export default function App() {
                   ))}
                 </select>
                 <button
-                  onClick={load}
+                  onClick={() => refetch()}
                   className="text-muted transition hover:text-vermilion"
                   title={t('refresh')}
                   aria-label={t('refresh')}
                 >
-                  <ArrowsClockwise size={16} weight="bold" className={loading ? 'animate-spin' : ''} />
+                  <ArrowsClockwise size={16} weight="bold" className={isFetching ? 'animate-spin' : ''} />
                 </button>
               </div>
             </div>
@@ -542,10 +419,10 @@ export default function App() {
                 <div className="py-24 text-center">
                   <p className="font-mono text-sm text-vermilion">
                     {t('loadFailed')}
-                    {error}
+                    {error.message}
                   </p>
                   <button
-                    onClick={load}
+                    onClick={() => refetch()}
                     className="mt-4 rounded-sm bg-ink px-4 py-2 text-sm text-paper"
                   >
                     {t('retry')}
@@ -636,18 +513,20 @@ export default function App() {
         </footer>
       </div>
 
-      {sharing && (
-        <ShareModal
-          repos={repos}
-          since={since}
-          language={language}
-          onClose={() => setSharing(false)}
-        />
-      )}
+      <Suspense fallback={null}>
+        {sharing && (
+          <ShareModal
+            repos={repos}
+            since={since}
+            language={language}
+            onClose={() => setSharing(false)}
+          />
+        )}
 
-      {shareRepo && (
-        <RepoShareModal repo={shareRepo} since={since} onClose={() => setShareRepo(null)} />
-      )}
+        {shareRepo && (
+          <RepoShareModal repo={shareRepo} since={since} onClose={() => setShareRepo(null)} />
+        )}
+      </Suspense>
     </div>
   )
 }

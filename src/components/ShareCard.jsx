@@ -1,5 +1,6 @@
 import { forwardRef } from 'react'
 import { useI18n } from '../i18n.jsx'
+import { SITE_DOMAIN } from '../lib/share.js'
 
 function formatNum(n) {
   if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'k'
@@ -86,8 +87,8 @@ const ShareCard = forwardRef(function ShareCard({ repos, since, language }, ref)
         ))}
       </div>
 
-      <div className="mt-3 border-t-2 border-ink pt-2 text-center font-mono text-[10px] uppercase tracking-[0.25em] text-muted">
-        {t('cardFooter')}
+      <div className="mt-3 border-t-2 border-ink pt-2 text-center font-mono text-[11px] uppercase tracking-[0.25em] text-vermilion">
+        {SITE_DOMAIN}
       </div>
     </div>
   )
