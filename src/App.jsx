@@ -39,7 +39,7 @@ function formatNum(n) {
   return String(n)
 }
 
-function RepoRow({ repo, index, onShare }) {
+function RepoRow({ repo, onShare }) {
   const { t } = useI18n()
   const top = repo.rank <= 3
   return (
@@ -47,8 +47,7 @@ function RepoRow({ repo, index, onShare }) {
       href={repo.url}
       target="_blank"
       rel="noreferrer"
-      className="rise group relative flex gap-5 border-t border-line-soft py-6 pl-4 pr-12 transition-colors first:border-t-0 hover:bg-paper-2/70"
-      style={{ animationDelay: `${Math.min(index, 12) * 35}ms` }}
+      className="group relative flex gap-5 border-t border-line-soft py-6 pl-4 pr-12 transition-colors first:border-t-0 hover:bg-paper-2/70"
     >
       {/* hover marginalia bar */}
       <span className="absolute left-0 top-0 h-full w-[3px] origin-top scale-y-0 bg-vermilion transition-transform duration-300 group-hover:scale-y-100" />
@@ -377,8 +376,8 @@ export default function App() {
                 <div className="py-24 text-center font-mono text-sm text-muted">{t('empty')}</div>
               ) : (
                 <div>
-                  {repos.map((r, i) => (
-                    <RepoRow key={r.fullName} repo={r} index={i} onShare={setShareRepo} />
+                  {repos.map((r) => (
+                    <RepoRow key={r.fullName} repo={r} onShare={setShareRepo} />
                   ))}
                 </div>
               )}
