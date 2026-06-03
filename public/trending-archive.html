@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reading GitHub Trending Over Time: Why a Historical Archive Matters</title>
+    <meta name="description" content="GitHub's Trending page only shows today. This is why a historical archive of past trending rankings is useful — for spotting durable shifts, studying how projects rose, and reading momentum over time instead of a single frozen frame." />
+    <link rel="canonical" href="https://trending.magikaru.com/trending-archive" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>
+      :root { color-scheme: light; }
+      body { margin: 0; background: #f5f1e8; color: #1a1a1a; font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; line-height: 1.75; }
+      .wrap { max-width: 760px; margin: 0 auto; padding: 56px 24px 96px; }
+      a { color: #c02a22; }
+      h1 { font-size: 2.4rem; margin: 0 0 .25em; letter-spacing: -.01em; line-height: 1.15; }
+      h2 { font-size: 1.35rem; margin: 2.2em 0 .5em; border-top: 1px solid #d8d2c4; padding-top: 1.1em; }
+      h3 { font-size: 1.05rem; margin: 1.6em 0 .3em; }
+      .kicker { font-family: ui-monospace, monospace; font-size: .72rem; letter-spacing: .3em; text-transform: uppercase; color: #c02a22; }
+      .lead { font-size: 1.1rem; color: #3a3a3a; }
+      .updated { font-family: ui-monospace, monospace; font-size: .75rem; color: #8a8a8a; }
+      nav { font-family: ui-monospace, monospace; font-size: .72rem; letter-spacing: .15em; text-transform: uppercase; margin-bottom: 40px; border-bottom: 2px solid #1a1a1a; padding-bottom: 12px; }
+      nav a { margin-right: 18px; text-decoration: none; color: #6b6b6b; }
+      nav a:hover { color: #1a1a1a; }
+      code { font-family: ui-monospace, monospace; background: #ece6d8; padding: 1px 5px; border-radius: 3px; font-size: .9em; }
+      ul, ol { padding-left: 1.3em; }
+      li { margin: .35em 0; }
+      .related { margin-top: 24px; font-size: .95rem; }
+      footer { margin-top: 64px; border-top: 1px solid #d8d2c4; padding-top: 20px; font-family: ui-monospace, monospace; font-size: .72rem; letter-spacing: .15em; text-transform: uppercase; color: #8a8a8a; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <nav>
+        <a href="/">← Home</a>
+        <a href="/learn">Learn</a>
+        <a href="/guide">Guide</a>
+        <a href="/about">About</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/contact">Contact</a>
+      </nav>
+
+      <p class="kicker">Guide</p>
+      <h1>Reading GitHub Trending Over Time</h1>
+      <p class="updated">Last updated: 2026-06-03</p>
+
+      <p class="lead">
+        GitHub's official Trending page has a quiet limitation that shapes how everyone uses it: it only ever shows the
+        present moment. Once a day rolls over, that day's ranking is gone, with no built-in way to ask what was
+        trending last Tuesday, or the week a framework you now depend on first appeared. This article is about why that
+        missing dimension matters, and what becomes possible once trending is something you can read <em>over time</em>.
+      </p>
+
+      <h2>The page that forgets</h2>
+      <p>
+        Trending is one of the richest informal records of the open-source world — a daily readout of what the
+        developer community is paying attention to. Yet it is also one of the most ephemeral. The official page is a
+        live view with no history: there is no archive, no calendar, no "as of" date you can pin. The moment passes and
+        the record vanishes.
+      </p>
+      <p>
+        For casual browsing that is fine. But it makes trending oddly hard to <em>study</em>. Questions that should be
+        easy — "how long did this project stay on the list?", "what else was hot the day this broke out?", "is this
+        language gaining or losing ground over the past few months?" — have no answer if you only ever see today.
+      </p>
+
+      <h2>What an archive lets you do</h2>
+      <p>
+        Keeping a snapshot of every day turns a fleeting feed into something you can query and compare. A few things
+        that become possible:
+      </p>
+      <ul>
+        <li>
+          <strong>Trace a project's rise.</strong> Instead of a single data point, you can watch a repository appear,
+          climb, peak and fade across consecutive days — the shape of its momentum, not just its current position.
+        </li>
+        <li>
+          <strong>Read the context of a moment.</strong> When a tool breaks out, the rest of that day's list tells you
+          what it was competing with and what the mood of the ecosystem was. Context you cannot reconstruct after the
+          fact.
+        </li>
+        <li>
+          <strong>See ecosystems shift.</strong> Filtering by language across many archived days reveals slow trends —
+          a language quietly gaining ground, a category heating up — that no single day could show.
+        </li>
+        <li>
+          <strong>Settle "remember when" questions.</strong> Revisit a specific date and see exactly what the community
+          cared about then, the same way you might look up an old front page.
+        </li>
+      </ul>
+
+      <h2>Momentum is a shape, not a number</h2>
+      <p>
+        The deeper reason history matters is that trending is fundamentally about <em>change</em>, and you cannot see
+        change from one frame. As covered in our <a href="/guide">guide to how the rankings work</a>, the list is
+        driven by star <em>velocity</em> — recent gains, not totals. Velocity is inherently a measurement over time.
+        Looking at a single day's ranking is like reading one frame of a film: you see positions, but not the motion
+        that produced them. A repository sitting at number three tells you little; a repository that climbed from
+        nowhere to number three over four days tells you a great deal.
+      </p>
+      <p>
+        Seeing the sequence also guards against a common mistake — treating a one-day spike as significance. A project
+        that tops the daily list and disappears by the weekend behaved very differently from one that held a spot for
+        two weeks, even though both "trended." Only the timeline distinguishes them.
+      </p>
+
+      <h2>How this site preserves it</h2>
+      <p>
+        Because GitHub does not provide history, this site builds its own. It records a snapshot of the rankings every
+        day and stores each one as a permanent archive. For days before the project existed, it backfills from the
+        public <a href="https://archive.org" rel="nofollow noopener" target="_blank">Internet Archive (Wayback
+        Machine)</a>, reconstructing past trending pages from their archived copies. The result is a calendar you can
+        scroll through: highlighted dates are days with data, and selecting one replays that day's ranking — by period
+        and by language — exactly as it stood.
+      </p>
+      <p>
+        It is worth being honest about the limits. Backfilled history is only as complete as the Internet Archive's
+        own captures, so some older days are missing or partial, and figures reflect the moment each snapshot was
+        taken. The archive is a faithful record of what was captured, not a reconstruction of every instant.
+      </p>
+
+      <h2>Try it</h2>
+      <p>
+        On the <a href="/">home page</a>, open the calendar to jump to any archived day and compare it with today.
+        Trends are far more interesting — and far more legible — when you can see them unfold rather than frozen in a
+        single frame.
+      </p>
+
+      <p class="related">
+        <strong>Related:</strong>
+        <a href="/guide">How GitHub Trending rankings work</a> ·
+        <a href="/stars-forks-watchers">Stars, forks &amp; watchers explained</a> ·
+        <a href="/discovery">Where developers find new projects</a>
+      </p>
+
+      <footer>
+        Data from github.com/trending · historical archives from the Internet Archive · not affiliated with GitHub<br />
+        <a href="/" style="color:#8a8a8a;">Back to home</a> ·
+        <a href="/learn" style="color:#8a8a8a;">Learn</a> ·
+        <a href="/contact" style="color:#8a8a8a;">Contact</a>
+      </footer>
+    </div>
+  </body>
+</html>

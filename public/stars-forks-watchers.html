@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GitHub Stars, Forks &amp; Watchers: What Each Number Really Means</title>
+    <meta name="description" content="A clear explanation of GitHub's three headline metrics — stars, forks and watchers — what each one actually measures, how they differ, and how to read them when judging an open-source project." />
+    <link rel="canonical" href="https://trending.magikaru.com/stars-forks-watchers" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>
+      :root { color-scheme: light; }
+      body { margin: 0; background: #f5f1e8; color: #1a1a1a; font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; line-height: 1.75; }
+      .wrap { max-width: 760px; margin: 0 auto; padding: 56px 24px 96px; }
+      a { color: #c02a22; }
+      h1 { font-size: 2.4rem; margin: 0 0 .25em; letter-spacing: -.01em; line-height: 1.15; }
+      h2 { font-size: 1.35rem; margin: 2.2em 0 .5em; border-top: 1px solid #d8d2c4; padding-top: 1.1em; }
+      h3 { font-size: 1.05rem; margin: 1.6em 0 .3em; }
+      .kicker { font-family: ui-monospace, monospace; font-size: .72rem; letter-spacing: .3em; text-transform: uppercase; color: #c02a22; }
+      .lead { font-size: 1.1rem; color: #3a3a3a; }
+      .updated { font-family: ui-monospace, monospace; font-size: .75rem; color: #8a8a8a; }
+      nav { font-family: ui-monospace, monospace; font-size: .72rem; letter-spacing: .15em; text-transform: uppercase; margin-bottom: 40px; border-bottom: 2px solid #1a1a1a; padding-bottom: 12px; }
+      nav a { margin-right: 18px; text-decoration: none; color: #6b6b6b; }
+      nav a:hover { color: #1a1a1a; }
+      table { border-collapse: collapse; width: 100%; margin: 1em 0; font-size: .95rem; }
+      th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #d8d2c4; vertical-align: top; }
+      th { font-family: ui-monospace, monospace; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: #6b6b6b; }
+      code { font-family: ui-monospace, monospace; background: #ece6d8; padding: 1px 5px; border-radius: 3px; font-size: .9em; }
+      ul, ol { padding-left: 1.3em; }
+      li { margin: .35em 0; }
+      .related { margin-top: 24px; font-size: .95rem; }
+      footer { margin-top: 64px; border-top: 1px solid #d8d2c4; padding-top: 20px; font-family: ui-monospace, monospace; font-size: .72rem; letter-spacing: .15em; text-transform: uppercase; color: #8a8a8a; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <nav>
+        <a href="/">← Home</a>
+        <a href="/learn">Learn</a>
+        <a href="/guide">Guide</a>
+        <a href="/about">About</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/contact">Contact</a>
+      </nav>
+
+      <p class="kicker">Guide</p>
+      <h1>GitHub Stars, Forks and Watchers: What Each Number Really Means</h1>
+      <p class="updated">Last updated: 2026-06-03</p>
+
+      <p class="lead">
+        Every GitHub repository wears three numbers at the top of its page: stars, forks and watchers. They look
+        similar and people often lump them together as "popularity," but each measures something genuinely different.
+        Knowing which is which makes you a far better judge of whether a project is widely admired, actively used, or
+        simply old. Here is what each one actually represents.
+      </p>
+
+      <h2>The quick version</h2>
+      <table>
+        <thead>
+          <tr><th>Metric</th><th>What the action is</th><th>What it signals</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Star</strong></td>
+            <td>A bookmark plus a public vote of interest.</td>
+            <td>Cumulative attention and goodwill over the project's lifetime.</td>
+          </tr>
+          <tr>
+            <td><strong>Fork</strong></td>
+            <td>Making your own copy of the repository.</td>
+            <td>Hands-on use — contributing, building on top, or experimenting with the code.</td>
+          </tr>
+          <tr>
+            <td><strong>Watcher</strong></td>
+            <td>Subscribing to the repository's notifications.</td>
+            <td>Ongoing, active engagement from people who want every update.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Stars: a bookmark and a vote</h2>
+      <p>
+        Starring a repository does two things at once. It saves the project to your personal list of starred repos (a
+        bookmark you can return to), and it publicly registers your interest. Because starring is effortless — one
+        click, no commitment — it is by far the most common of the three actions and the number people quote when they
+        say a project is "popular."
+      </p>
+      <p>
+        The key thing to remember is that the <strong>total</strong> star count is cumulative and only ever goes up
+        (barring the rare unstar). It is a <em>lagging</em> indicator: it tells you how much attention a project has
+        gathered across its entire history, not how much it is getting right now. A library with 60,000 stars earned
+        over six years and one earning 6,000 stars this month are telling you very different things, even though both
+        numbers are large. This is exactly why <a href="/guide">GitHub Trending</a> ranks by stars <em>gained in a
+        period</em> rather than by the total.
+      </p>
+
+      <h2>Forks: evidence of hands-on use</h2>
+      <p>
+        A fork is a complete copy of a repository under your own account. People fork for concrete, active reasons: to
+        propose a change via a pull request, to build a customised version, to preserve a snapshot, or to experiment
+        without touching the original. Forking takes more intent than starring, so it is a stronger signal of actual
+        engagement with the <em>code</em> rather than the idea.
+      </p>
+      <p>
+        The most useful way to read forks is <strong>relative to stars</strong>. A high fork-to-star ratio often points
+        to a project people are working <em>inside</em> — templates, boilerplates, starter kits, teaching repositories,
+        and libraries with many contributors all tend to be forked heavily. A very low ratio suggests a project people
+        admire and use as-is but rarely modify, like a polished end-user application. Neither is better; they describe
+        different kinds of projects.
+      </p>
+      <h3>A caveat on forks</h3>
+      <p>
+        Fork counts can be noisy. Some courses and tutorials instruct large groups of students to fork a repository,
+        inflating the number without indicating broad adoption. Treat a surprising fork count as a prompt to look
+        closer, not as proof on its own.
+      </p>
+
+      <h2>Watchers: who wants every update</h2>
+      <p>
+        Watching a repository subscribes you to its activity — by default, notifications about new releases, and
+        optionally every issue, pull request and discussion. Of the three, watching is the highest-commitment action
+        and therefore the smallest number. It reflects people who care enough to want a steady stream of updates in
+        their inbox.
+      </p>
+      <p>
+        Historically "watch" and "star" were once tangled together on GitHub, which is part of why the two are still
+        confused. Today they are clearly separate: a star is a one-time vote, a watch is an ongoing subscription. A
+        healthy watcher count relative to stars suggests a committed core audience — maintainers, integrators, and
+        dependents who need to track changes closely.
+      </p>
+
+      <h2>How to read them together</h2>
+      <p>
+        No single number tells the whole story. Reading them as a set is what gives you a real picture:
+      </p>
+      <ul>
+        <li><strong>High stars, low everything else</strong> — broad admiration, possibly coasting on past reputation. Check recent commit activity.</li>
+        <li><strong>High fork ratio</strong> — a project people build on or contribute to; common for frameworks, templates and libraries.</li>
+        <li><strong>Strong watcher count</strong> — a committed audience that depends on the project and tracks its releases.</li>
+        <li><strong>Stars climbing right now</strong> — current momentum, which the totals alone will not reveal. This is the signal Trending is built to surface.</li>
+      </ul>
+      <p>
+        And remember what none of these numbers measure: code quality, security, maintenance health, or fitness for
+        your particular use. They are signals of <em>attention and activity</em>, useful for discovery and triage —
+        a starting point for evaluation, never the conclusion.
+      </p>
+
+      <p class="related">
+        <strong>Related:</strong>
+        <a href="/guide">How GitHub Trending rankings work</a> ·
+        <a href="/how-to-trend">How to get your project on Trending</a> ·
+        <a href="/trending-archive">Reading trending over time</a>
+      </p>
+
+      <footer>
+        Data from github.com/trending · independently maintained · not affiliated with GitHub<br />
+        <a href="/" style="color:#8a8a8a;">Back to home</a> ·
+        <a href="/learn" style="color:#8a8a8a;">Learn</a> ·
+        <a href="/contact" style="color:#8a8a8a;">Contact</a>
+      </footer>
+    </div>
+  </body>
+</html>

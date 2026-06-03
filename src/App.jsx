@@ -431,6 +431,9 @@ export default function App() {
 
         <footer className="mt-14 border-t border-line pt-4 text-center font-mono text-[11px] uppercase tracking-widest text-muted">
           <nav className="mb-2 flex flex-wrap items-center justify-center gap-x-5 gap-y-1">
+            <a href="/learn" className="transition hover:text-vermilion">
+              {t('navLearn')}
+            </a>
             <a href="/guide" className="transition hover:text-vermilion">
               {t('navGuide')}
             </a>

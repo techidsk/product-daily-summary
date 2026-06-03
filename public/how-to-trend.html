@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>How to Get Your Project on GitHub Trending — A Practical Guide</title>
+    <meta name="description" content="A practical, honest guide to getting your repository onto GitHub Trending: how the ranking rewards star velocity, how to time and prepare a launch, where to share it, and what to avoid." />
+    <link rel="canonical" href="https://trending.magikaru.com/how-to-trend" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>
+      :root { color-scheme: light; }
+      body { margin: 0; background: #f5f1e8; color: #1a1a1a; font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; line-height: 1.75; }
+      .wrap { max-width: 760px; margin: 0 auto; padding: 56px 24px 96px; }
+      a { color: #c02a22; }
+      h1 { font-size: 2.4rem; margin: 0 0 .25em; letter-spacing: -.01em; line-height: 1.15; }
+      h2 { font-size: 1.35rem; margin: 2.2em 0 .5em; border-top: 1px solid #d8d2c4; padding-top: 1.1em; }
+      h3 { font-size: 1.05rem; margin: 1.6em 0 .3em; }
+      .kicker { font-family: ui-monospace, monospace; font-size: .72rem; letter-spacing: .3em; text-transform: uppercase; color: #c02a22; }
+      .lead { font-size: 1.1rem; color: #3a3a3a; }
+      .updated { font-family: ui-monospace, monospace; font-size: .75rem; color: #8a8a8a; }
+      nav { font-family: ui-monospace, monospace; font-size: .72rem; letter-spacing: .15em; text-transform: uppercase; margin-bottom: 40px; border-bottom: 2px solid #1a1a1a; padding-bottom: 12px; }
+      nav a { margin-right: 18px; text-decoration: none; color: #6b6b6b; }
+      nav a:hover { color: #1a1a1a; }
+      code { font-family: ui-monospace, monospace; background: #ece6d8; padding: 1px 5px; border-radius: 3px; font-size: .9em; }
+      ul, ol { padding-left: 1.3em; }
+      li { margin: .35em 0; }
+      .related { margin-top: 24px; font-size: .95rem; }
+      footer { margin-top: 64px; border-top: 1px solid #d8d2c4; padding-top: 20px; font-family: ui-monospace, monospace; font-size: .72rem; letter-spacing: .15em; text-transform: uppercase; color: #8a8a8a; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <nav>
+        <a href="/">← Home</a>
+        <a href="/learn">Learn</a>
+        <a href="/guide">Guide</a>
+        <a href="/about">About</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/contact">Contact</a>
+      </nav>
+
+      <p class="kicker">Guide</p>
+      <h1>How to Get Your Project on GitHub Trending</h1>
+      <p class="updated">Last updated: 2026-06-03</p>
+
+      <p class="lead">
+        Landing on GitHub Trending can put a project in front of tens of thousands of developers in a single day. There
+        is no secret submission form and no way to buy your way on legitimately — the list is computed from real
+        activity. But the activity it rewards is specific and somewhat predictable, which means you can prepare for it.
+        This guide explains what actually drives the ranking and how to give a launch the best honest shot at it.
+      </p>
+
+      <h2>First, understand what the ranking rewards</h2>
+      <p>
+        The single most important thing to internalise is that GitHub Trending does not rank by total stars. It ranks by
+        <strong>recent star velocity</strong> — roughly, how many <em>new</em> stars a repository gains within a window
+        (a day, a week, a month) relative to the normal background rate. A two-year-old project with 40,000 stars that
+        gains 50 today will not trend; a brand-new repository that gains 300 stars in an afternoon almost certainly will.
+      </p>
+      <p>
+        That single fact reframes the whole problem. You are not trying to be <em>big</em>; you are trying to be
+        <strong>suddenly interesting to a lot of people at once</strong>. Everything below follows from that. For the
+        full mechanics, see our <a href="/guide">guide to how the rankings work</a>.
+      </p>
+
+      <h2>Prepare the repository before you launch</h2>
+      <p>
+        Most of the stars that push a project onto the list are decided in the first few seconds a visitor spends on the
+        page. If the repo is confusing, they leave without starring. Before you share anything, make the project
+        legible at a glance:
+      </p>
+      <ul>
+        <li>
+          <strong>A clear name and one-line description.</strong> The repository <code>description</code> field shows up
+          on the Trending list itself. Make it a plain-English sentence a stranger understands — what it is and who it
+          is for — not an internal codename or a vague tagline.
+        </li>
+        <li>
+          <strong>A README that sells in the first screen.</strong> Open with a single sentence explaining the problem
+          you solve, then a short demo: a GIF, a screenshot, or a three-line code sample. Reviewers and casual visitors
+          decide in seconds whether to read further.
+        </li>
+        <li>
+          <strong>Repository topics.</strong> Add relevant <code>topics</code> (the tags under the repo title). They
+          help GitHub's own discovery surfaces and clarify the project's category.
+        </li>
+        <li>
+          <strong>A license and basic hygiene.</strong> A license file, a short contributing note, and no obviously
+          broken install instructions all raise the share of visitors who trust the project enough to star it.
+        </li>
+      </ul>
+
+      <h2>Time the launch</h2>
+      <p>
+        Because the daily list is about velocity, <em>when</em> the stars arrive matters as much as how many. A burst
+        concentrated into a few hours moves the ranking far more than the same number of stars spread thinly over a
+        week.
+      </p>
+      <ul>
+        <li>
+          <strong>Pick a single launch moment</strong> rather than quietly pushing the repo public days early. You want
+          the spike, not a slow trickle that never crosses the threshold.
+        </li>
+        <li>
+          <strong>Aim for when your audience is awake.</strong> For a developer-tools audience that skews toward the
+          Americas and Europe, a weekday morning US time tends to catch both continents. Adjust for your real audience.
+        </li>
+        <li>
+          <strong>Have the README, demo and links ready</strong> before you post anywhere — the first hour is when
+          momentum is won or lost.
+        </li>
+      </ul>
+
+      <h2>Where to share it</h2>
+      <p>
+        Trending is downstream of attention you generate elsewhere. The repositories that climb are almost always being
+        discussed somewhere first. Realistic channels, roughly in order of impact for technical projects:
+      </p>
+      <ul>
+        <li><strong>Hacker News</strong> (a "Show HN" post) — a front-page thread can single-handedly trigger a trending day.</li>
+        <li><strong>Reddit</strong> — relevant subreddits for your language or domain, where self-promotion rules allow.</li>
+        <li><strong>X / Mastodon / Bluesky</strong> — a clear thread with a demo, especially if anyone with reach reshares it.</li>
+        <li><strong>Developer newsletters and aggregators</strong> in your niche, which often pull from the same launches.</li>
+        <li><strong>Communities you already belong to</strong> — Discord servers, Slack groups, forums — where sharing is welcome and not spam.</li>
+      </ul>
+      <p>
+        Write the external post for humans, not for the algorithm: explain the problem, show the result, and link the
+        repo. The stars follow genuine interest.
+      </p>
+
+      <h2>What not to do</h2>
+      <p>
+        It is tempting to look for shortcuts. Avoid them — they range from ineffective to account-ending:
+      </p>
+      <ul>
+        <li>
+          <strong>Don't buy stars or use "star-for-star" rings.</strong> Artificial engagement violates GitHub's
+          Acceptable Use Policies and can get a repository or account flagged or removed. Trending's ranking also
+          discounts patterns that look inorganic.
+        </li>
+        <li>
+          <strong>Don't beg in a way that annoys.</strong> Mass-DMing people to star your repo burns goodwill faster
+          than it earns stars.
+        </li>
+        <li>
+          <strong>Don't fake the product.</strong> A launch that over-promises gets a spike and then a wave of
+          disappointed visitors who never come back — the opposite of what you want.
+        </li>
+      </ul>
+
+      <h2>Sustain it beyond the spike</h2>
+      <p>
+        A single daily appearance is nice but fleeting. The projects that benefit most turn one good day into lasting
+        momentum: they respond to issues and pull requests quickly while the attention is high, ship a visible follow-up
+        soon after, and keep posting progress. A repository that shows up across the daily, weekly <em>and</em> monthly
+        views is sending a much stronger signal than a one-day wonder — and that staying power is what converts a
+        trending moment into real users and contributors.
+      </p>
+
+      <h2>Set realistic expectations</h2>
+      <p>
+        Not every good project trends, and trending is not a measure of quality — it is a measure of attention at a
+        moment in time. Plenty of excellent libraries never appear because their audience is small or their value is
+        slow-burning rather than viral. Treat a trending appearance as a useful amplifier for a launch you were going to
+        do anyway, not as the goal itself. The durable win is the users and contributors who stick around after the
+        list has moved on.
+      </p>
+
+      <p class="related">
+        <strong>Related:</strong>
+        <a href="/guide">How GitHub Trending rankings work</a> ·
+        <a href="/stars-forks-watchers">Stars, forks &amp; watchers explained</a> ·
+        <a href="/discovery">Where developers find new projects</a>
+      </p>
+
+      <footer>
+        Data from github.com/trending · independently maintained · not affiliated with GitHub<br />
+        <a href="/" style="color:#8a8a8a;">Back to home</a> ·
+        <a href="/learn" style="color:#8a8a8a;">Learn</a> ·
+        <a href="/contact" style="color:#8a8a8a;">Contact</a>
+      </footer>
+    </div>
+  </body>
+</html>

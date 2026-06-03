@@ -15,6 +15,36 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://trending.magikaru.com/learn</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://trending.magikaru.com/how-to-trend</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://trending.magikaru.com/stars-forks-watchers</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://trending.magikaru.com/discovery</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://trending.magikaru.com/trending-archive</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://trending.magikaru.com/about</loc>
     <lastmod>2026-06-02</lastmod>
     <changefreq>monthly</changefreq>

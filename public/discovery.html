@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Where Developers Find New Projects: Trending, Hacker News, Reddit &amp; More</title>
+    <meta name="description" content="A comparison of the main ways developers discover new open-source projects — GitHub Trending, Hacker News, Reddit, newsletters and Awesome lists — what each is good at, and how to combine them." />
+    <link rel="canonical" href="https://trending.magikaru.com/discovery" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>
+      :root { color-scheme: light; }
+      body { margin: 0; background: #f5f1e8; color: #1a1a1a; font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; line-height: 1.75; }
+      .wrap { max-width: 760px; margin: 0 auto; padding: 56px 24px 96px; }
+      a { color: #c02a22; }
+      h1 { font-size: 2.4rem; margin: 0 0 .25em; letter-spacing: -.01em; line-height: 1.15; }
+      h2 { font-size: 1.35rem; margin: 2.2em 0 .5em; border-top: 1px solid #d8d2c4; padding-top: 1.1em; }
+      h3 { font-size: 1.05rem; margin: 1.6em 0 .3em; }
+      .kicker { font-family: ui-monospace, monospace; font-size: .72rem; letter-spacing: .3em; text-transform: uppercase; color: #c02a22; }
+      .lead { font-size: 1.1rem; color: #3a3a3a; }
+      .updated { font-family: ui-monospace, monospace; font-size: .75rem; color: #8a8a8a; }
+      nav { font-family: ui-monospace, monospace; font-size: .72rem; letter-spacing: .15em; text-transform: uppercase; margin-bottom: 40px; border-bottom: 2px solid #1a1a1a; padding-bottom: 12px; }
+      nav a { margin-right: 18px; text-decoration: none; color: #6b6b6b; }
+      nav a:hover { color: #1a1a1a; }
+      table { border-collapse: collapse; width: 100%; margin: 1em 0; font-size: .95rem; }
+      th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #d8d2c4; vertical-align: top; }
+      th { font-family: ui-monospace, monospace; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: #6b6b6b; }
+      code { font-family: ui-monospace, monospace; background: #ece6d8; padding: 1px 5px; border-radius: 3px; font-size: .9em; }
+      ul, ol { padding-left: 1.3em; }
+      li { margin: .35em 0; }
+      .related { margin-top: 24px; font-size: .95rem; }
+      footer { margin-top: 64px; border-top: 1px solid #d8d2c4; padding-top: 20px; font-family: ui-monospace, monospace; font-size: .72rem; letter-spacing: .15em; text-transform: uppercase; color: #8a8a8a; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <nav>
+        <a href="/">← Home</a>
+        <a href="/learn">Learn</a>
+        <a href="/guide">Guide</a>
+        <a href="/about">About</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/contact">Contact</a>
+      </nav>
+
+      <p class="kicker">Guide</p>
+      <h1>Where Developers Find New Projects</h1>
+      <p class="updated">Last updated: 2026-06-03</p>
+
+      <p class="lead">
+        Nobody keeps up with open source from a single source. The tool you reach for depends on what you are looking
+        for — the freshest launches, battle-tested community favourites, or a curated shortlist in one narrow domain.
+        This is a practical comparison of the main discovery channels developers use, what each is genuinely good at,
+        and where GitHub Trending fits among them.
+      </p>
+
+      <h2>The landscape at a glance</h2>
+      <table>
+        <thead>
+          <tr><th>Source</th><th>Strength</th><th>Watch out for</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>GitHub Trending</strong></td>
+            <td>Real-time velocity; what the dev community is starring right now.</td>
+            <td>Recency bias; favours viral launches over slow-burn quality.</td>
+          </tr>
+          <tr>
+            <td><strong>Hacker News</strong></td>
+            <td>Discussion and scrutiny; comments are often as valuable as the link.</td>
+            <td>Front-page luck; narrow cultural slant.</td>
+          </tr>
+          <tr>
+            <td><strong>Reddit</strong></td>
+            <td>Niche communities per language and domain.</td>
+            <td>Quality varies wildly by subreddit; self-promotion noise.</td>
+          </tr>
+          <tr>
+            <td><strong>Newsletters</strong></td>
+            <td>Human-curated, low-noise, arrives on a schedule.</td>
+            <td>Editorial taste; you see what one curator chose.</td>
+          </tr>
+          <tr>
+            <td><strong>Awesome lists</strong></td>
+            <td>Deep, durable shortlists for a specific topic.</td>
+            <td>Can go stale; inclusion is not a quality guarantee.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>GitHub Trending — what is hot right now</h2>
+      <p>
+        Trending answers one question well: which repositories are gaining stars fastest at this moment? Because it is
+        computed from live activity rather than editorial choice, it surfaces brand-new tools the day they break, often
+        before anyone has written about them. The trade-off is recency bias — it rewards a sudden spike of attention,
+        which correlates with novelty and marketing reach more than with long-term value. It is the best place to catch
+        what is <em>new</em>, and a poor place to judge what is <em>good</em>. Filtering by language and cross-checking
+        the daily, weekly and monthly views (see our <a href="/guide">guide</a>) helps separate genuine momentum from
+        one-day spikes.
+      </p>
+
+      <h2>Hacker News — discovery plus scrutiny</h2>
+      <p>
+        A "Show HN" post or a link to a repository can reach a large, technically demanding audience fast. What sets
+        Hacker News apart is the comment thread: you frequently learn more from the discussion — prior art, gotchas,
+        the maintainer answering questions — than from the project page itself. The downsides are well known: whether a
+        post reaches the front page involves a good deal of timing and luck, and the audience has its own strong
+        cultural leanings. Read it for the conversation, not just the link.
+      </p>
+
+      <h2>Reddit — communities that go deep</h2>
+      <p>
+        Reddit's strength is its subreddits: focused communities around a language, framework or problem space, where
+        practitioners share tools they actually use. For domain-specific discovery — a particular language ecosystem, a
+        sub-field like data engineering or game development — the right subreddit can beat any general feed. The
+        catch is that quality and moderation differ enormously between communities, and promotional noise is constant.
+        Find the few subreddits that match your work and ignore the rest.
+      </p>
+
+      <h2>Newsletters — curation on a schedule</h2>
+      <p>
+        Plenty of developers outsource discovery to a trusted human editor. Language- and topic-specific newsletters
+        arrive weekly with a hand-picked set of links, which keeps the signal-to-noise ratio high and the time cost
+        low. The limitation is the flip side of the benefit: you are seeing one curator's taste, filtered and delayed.
+        Newsletters are excellent as a low-effort baseline, less so when you need exhaustive coverage.
+      </p>
+
+      <h2>Awesome lists and topic hubs — durable shortlists</h2>
+      <p>
+        The "awesome-X" lists on GitHub are community-maintained collections of the best resources for a specific
+        topic. When you are entering a new area and want the canonical libraries rather than the newest ones, a good
+        awesome list is hard to beat. The risks are staleness — some lists stop being maintained — and the fact that
+        inclusion reflects a maintainer's judgement, not an objective bar. Check when the list was last updated before
+        trusting it.
+      </p>
+
+      <h2>How to combine them</h2>
+      <p>
+        These sources are complementary, not competing. A practical routine:
+      </p>
+      <ul>
+        <li><strong>Scan Trending</strong> for what broke this week — filtered to your language, and cross-checked against the weekly view to filter out flukes.</li>
+        <li><strong>Read Hacker News</strong> when a project intrigues you, for the scrutiny the raw link cannot give.</li>
+        <li><strong>Subscribe to one or two newsletters</strong> as a low-effort safety net so you do not miss the big ones.</li>
+        <li><strong>Keep an awesome list bookmarked</strong> for each area you work in, as a reference rather than a feed.</li>
+      </ul>
+      <p>
+        Trending is the real-time pulse; the others add scrutiny, curation and depth. Used together they cover what no
+        single source can. And because this site <a href="/trending-archive">archives every day</a>, you can also look
+        backwards — not just at what is trending now, but at what was trending when a project you care about first
+        broke through.
+      </p>
+
+      <p class="related">
+        <strong>Related:</strong>
+        <a href="/guide">How GitHub Trending rankings work</a> ·
+        <a href="/how-to-trend">How to get your project on Trending</a> ·
+        <a href="/trending-archive">Reading trending over time</a>
+      </p>
+
+      <footer>
+        Data from github.com/trending · independently maintained · not affiliated with GitHub<br />
+        <a href="/" style="color:#8a8a8a;">Back to home</a> ·
+        <a href="/learn" style="color:#8a8a8a;">Learn</a> ·
+        <a href="/contact" style="color:#8a8a8a;">Contact</a>
+      </footer>
+    </div>
+  </body>
+</html>
