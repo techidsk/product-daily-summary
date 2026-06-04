@@ -448,7 +448,10 @@ export default function App() {
 
         {/* ───────────────── Body: feed + ad rail ───────────────── */}
         <div className={`mt-8 grid gap-10 ${ADS_VISIBLE ? 'lg:grid-cols-[1fr_300px]' : ''}`}>
-          <main>
+          {/* min-w-0: grid items default to min-width:auto and won't shrink below
+              their content's intrinsic width — long repo names would otherwise blow
+              the column past the viewport on mobile. This lets the inner truncate work. */}
+          <main className="min-w-0">
             {/* controls */}
             <div className="mb-2 flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-end gap-6">

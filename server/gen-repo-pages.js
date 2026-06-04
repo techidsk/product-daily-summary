@@ -42,6 +42,22 @@ function fmtNum(n) {
   return String(n ?? 0)
 }
 
+// GitHub owner avatar — resolves for both users and orgs, redirects to the CDN.
+// No extra data / DB column needed; ?size= keeps the payload small but retina-crisp.
+function avatarUrl(owner) {
+  return `https://github.com/${encodeURIComponent(owner)}.png?size=80`
+}
+
+// Medal class for a best (peak) rank: 1 = gold, 2 = silver, 3 = bronze, else none.
+function medalClass(rank) {
+  return rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : ''
+}
+
+// Longevity tier for days on trending: 40+ "legend" (animated), 20+ "veteran".
+function daysClass(days) {
+  return days >= 40 ? 'legend' : days >= 20 ? 'veteran' : ''
+}
+
 // Page through a Supabase select 1000 rows at a time.
 async function fetchAll(supabase, table, columns, applyFilters = (q) => q) {
   const pageSize = 1000
@@ -98,6 +114,9 @@ const HEAD_STYLE = `
       a { color: #c02a22; }
       h1 { font-size: 2.1rem; margin: 0 0 .2em; letter-spacing: -.01em; line-height: 1.15; word-break: break-word; }
       h1 .owner { color: #8a8a8a; font-weight: 400; }
+      .repo-head { display: flex; align-items: center; gap: 16px; margin-bottom: .2em; }
+      .repo-head .ava { width: 56px; height: 56px; border-radius: 12px; flex: none; background: #e8e0d0; object-fit: cover; }
+      .repo-head h1 { margin: 0; }
       h2 { font-size: 1.2rem; margin: 2em 0 .5em; border-top: 1px solid #d8d2c4; padding-top: 1em; }
       .kicker { font-family: ui-monospace, monospace; font-size: .72rem; letter-spacing: .3em; text-transform: uppercase; color: #c02a22; }
       .lead { font-size: 1.1rem; color: #3a3a3a; }
@@ -108,6 +127,10 @@ const HEAD_STYLE = `
       .stats { display: flex; flex-wrap: wrap; gap: 10px 28px; margin: 1.2em 0; padding: 0; list-style: none; }
       .stats li { font-family: ui-monospace, monospace; }
       .stats .v { font-size: 1.5rem; color: #1a1a1a; }
+      .stats .v.gold { color: #b8860b; }
+      .stats .v.silver { color: #8a929b; }
+      .stats .v.bronze { color: #b06a2e; }
+      .stats .v.veteran, .stats .v.legend { color: #c02a22; }
       .stats .k { display: block; font-size: .68rem; letter-spacing: .15em; text-transform: uppercase; color: #8a8a8a; }
       .chart { width: 100%; height: auto; margin: .5em 0 1em; }
       .chart .grid { stroke: #d8d2c4; stroke-width: 1; }
@@ -189,7 +212,10 @@ function renderRepoPage(r) {
     <div class="wrap">${NAV}
 
       <p class="kicker">Trending history</p>
-      <h1><span class="owner">${esc(owner)}/</span>${esc(name)}</h1>
+      <div class="repo-head">
+        <img class="ava" src="${avatarUrl(owner)}" alt="" width="56" height="56" />
+        <h1><span class="owner">${esc(owner)}/</span>${esc(name)}</h1>
+      </div>
       <p class="lead">
         ${esc(fullName)} is ${langPhrase} that has appeared on GitHub Trending's daily ranking on
         <strong>${stats.days}</strong> days, first seen <strong>${esc(stats.firstSeen)}</strong>.
@@ -198,8 +224,8 @@ function renderRepoPage(r) {
       ${description ? `<p class="desc">${esc(description)}</p>` : ''}
 
       <ul class="stats">
-        <li><span class="v">${stats.days}</span><span class="k">Days on trending</span></li>
-        <li><span class="v">#${stats.peakRank}</span><span class="k">Best rank</span></li>
+        <li><span class="v${daysClass(stats.days) ? ' ' + daysClass(stats.days) : ''}">${daysClass(stats.days) === 'legend' ? '🔥 ' : ''}${stats.days}</span><span class="k">Days on trending</span></li>
+        <li><span class="v${medalClass(stats.peakRank) ? ' ' + medalClass(stats.peakRank) : ''}">#${stats.peakRank}</span><span class="k">Best rank</span></li>
         <li><span class="v">${fmtNum(stats.latestStars)}</span><span class="k">Stars (latest snapshot)</span></li>
         ${language ? `<li><span class="v"><span class="dot-lang" style="background:${esc(languageColor || '#94a3b8')}"></span>${esc(language)}</span><span class="k">Language</span></li>` : ''}
       </ul>
@@ -240,13 +266,20 @@ function renderRepoPage(r) {
 
 function renderHubPage(list, totalPages) {
   const items = list
-    .map(
-      (r) => `
+    .map((r) => {
+      const dc = daysClass(r.stats.days)
+      const mc = medalClass(r.stats.peakRank)
+      return `
         <a class="row" href="/repo/${r.owner}/${r.name}">
+          <img class="ava" src="${avatarUrl(r.owner)}" alt="" loading="lazy" width="36" height="36" />
           <span class="nm"><span class="owner">${esc(r.owner)}/</span>${esc(r.name)}</span>
-          <span class="meta">${r.stats.days} days · best #${r.stats.peakRank}${r.language ? ' · ' + esc(r.language) : ''}</span>
-        </a>`,
-    )
+          <span class="meta">
+            <span class="days${dc ? ' ' + dc : ''}">${dc === 'legend' ? '🔥 ' : ''}${r.stats.days}d</span>
+            <span class="best${mc ? ' ' + mc : ''}">best #${r.stats.peakRank}</span>
+            ${r.language ? `<span class="lang">${esc(r.language)}</span>` : ''}
+          </span>
+        </a>`
+    })
     .join('')
 
   return `<!doctype html>
@@ -259,11 +292,23 @@ function renderHubPage(list, totalPages) {
     <link rel="canonical" href="${SITE}/repo/" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <style>${HEAD_STYLE}
-      .row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; text-decoration: none; color: inherit; border-top: 1px solid #d8d2c4; padding: .8em 0; }
+      .row { display: flex; align-items: center; gap: 14px; text-decoration: none; color: inherit; border-top: 1px solid #d8d2c4; padding: .7em 0; }
       .row:hover .nm { color: #c02a22; }
-      .row .nm { font-family: ui-monospace, monospace; font-size: 1rem; word-break: break-word; }
+      .row .ava { width: 36px; height: 36px; border-radius: 8px; flex: none; background: #e8e0d0; object-fit: cover; }
+      .row .nm { flex: 1; min-width: 0; font-family: ui-monospace, monospace; font-size: 1rem; word-break: break-word; }
       .row .owner { color: #8a8a8a; }
-      .row .meta { font-family: ui-monospace, monospace; font-size: .72rem; letter-spacing: .05em; color: #8a8a8a; white-space: nowrap; }
+      .row .meta { display: flex; align-items: center; gap: 8px; flex: none; font-family: ui-monospace, monospace; font-size: .72rem; letter-spacing: .03em; }
+      .row .days { padding: 2px 8px; border-radius: 999px; color: #8a8a8a; background: #ece5d6; white-space: nowrap; }
+      .row .days.veteran { color: #fff; background: #c02a22; font-weight: 600; }
+      .row .days.legend { color: #fff; font-weight: 700; background: linear-gradient(135deg, #c02a22 0%, #e0913a 100%); animation: pds-glow 2.4s ease-in-out infinite; }
+      .row .best { padding: 2px 8px; border-radius: 6px; color: #8a8a8a; white-space: nowrap; }
+      .row .best.gold { background: linear-gradient(135deg, #f9e08c, #d4af37); color: #4a3800; font-weight: 700; }
+      .row .best.silver { background: linear-gradient(135deg, #eef1f4, #bbc4cd); color: #3f4750; font-weight: 700; }
+      .row .best.bronze { background: linear-gradient(135deg, #eab483, #c17a3f); color: #3f2410; font-weight: 700; }
+      .row .lang { color: #8a8a8a; white-space: nowrap; }
+      @keyframes pds-glow { 0%, 100% { box-shadow: 0 0 0 0 rgba(224, 145, 58, 0); } 50% { box-shadow: 0 0 10px 1px rgba(224, 145, 58, .55); } }
+      @media (prefers-reduced-motion: reduce) { .row .days.legend { animation: none; } }
+      @media (max-width: 520px) { .row .lang { display: none; } }
     </style>
   </head>
   <body>
