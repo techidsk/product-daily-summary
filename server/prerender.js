@@ -32,39 +32,69 @@ function fmtNum(n) {
   return String(n ?? 0)
 }
 
+// Mirror src/api/trending.js mapRows() exactly, so the JSON we inject as the
+// client's React Query initialData has the same shape as a live fetchTrending()
+// result — no missing fields, no visual "pop" when the background refetch lands.
+function mapRow(r) {
+  return {
+    rank: r.rank,
+    stars: r.stars,
+    forks: r.forks,
+    periodStars: r.period_stars,
+    owner: r.repos.owner,
+    name: r.repos.name,
+    fullName: r.repos.full_name,
+    url: r.repos.url,
+    description: r.repos.description,
+    language: r.repos.language,
+    languageColor: r.repos.language_color,
+  }
+}
+
 async function fetchLatestDaily(supabase) {
+  // Two most recent daily/all-language snapshots, so we can diff for the ▲/▼/NEW
+  // markers exactly like the client does (annotateDeltas).
   const { data: snaps, error } = await supabase
     .from('snapshots')
     .select('id, captured_date')
     .eq('period', 'daily')
     .eq('lang_filter', '')
     .order('captured_at', { ascending: false })
-    .limit(1)
+    .limit(2)
   if (error) throw new Error(error.message)
   if (!snaps?.length) return null
 
   const { data: rows, error: e2 } = await supabase
     .from('rankings')
     .select(
-      'rank, stars, forks, period_stars, repos!inner(full_name, owner, name, url, description, language)',
+      'rank, stars, forks, period_stars, repos!inner(full_name, owner, name, url, description, language, language_color)',
     )
     .eq('snapshot_id', snaps[0].id)
     .order('rank')
   if (e2) throw new Error(e2.message)
 
-  return {
-    date: snaps[0].captured_date,
-    repos: (rows || []).map((r) => ({
-      rank: r.rank,
-      stars: r.stars,
-      forks: r.forks,
-      periodStars: r.period_stars,
-      fullName: r.repos.full_name,
-      url: r.repos.url,
-      description: r.repos.description,
-      language: r.repos.language,
-    })),
+  // Previous snapshot's rank-by-name map for the delta diff (best-effort).
+  let prev = null
+  if (snaps[1]) {
+    const { data: prevRows } = await supabase
+      .from('rankings')
+      .select('rank, repos!inner(full_name)')
+      .eq('snapshot_id', snaps[1].id)
+    if (prevRows) prev = new Map(prevRows.map((row) => [row.repos.full_name, row.rank]))
   }
+
+  const repos = (rows || []).map((r) => {
+    const m = mapRow(r)
+    if (!prev) return { ...m, rankDelta: null, isNew: false }
+    const prevRank = prev.get(m.fullName)
+    return {
+      ...m,
+      rankDelta: prevRank === undefined ? null : prevRank - m.rank,
+      isNew: prevRank === undefined,
+    }
+  })
+
+  return { date: snaps[0].captured_date, repos }
 }
 
 function renderContent({ date, repos }) {
@@ -123,6 +153,17 @@ function renderJsonLd({ date, repos }) {
     })),
   }
   return `<script type="application/ld+json">${JSON.stringify(list)}</script>`
+}
+
+// Inline the daily feed as JSON so the client can hydrate React Query's cache on
+// first paint — the live feed renders instantly instead of flashing a loading
+// state over the prerendered HTML. `at` is the build time; the client passes it
+// as initialDataUpdatedAt so the data reads as stale and silently refetches the
+// latest snapshot in the background (no spinner). Escape `<` to keep the JSON
+// from breaking out of the <script> element.
+function renderInitialData({ repos }, at) {
+  const json = JSON.stringify({ at, repos }).replace(/</g, '\\u003c')
+  return `<script id="initial-daily" type="application/json">${json}</script>`
 }
 
 // Stamp the homepage <lastmod> (the first one in the file) with the latest
@@ -184,8 +225,9 @@ async function main() {
   const after = html.slice(j)
   html = before + '\n' + renderContent(data) + '\n      ' + after
 
-  // ItemList JSON-LD before </head>
-  html = html.replace('</head>', `    ${renderJsonLd(data)}\n  </head>`)
+  // ItemList JSON-LD + the client-hydration payload before </head>
+  const initial = renderInitialData(data, Date.now())
+  html = html.replace('</head>', `    ${renderJsonLd(data)}\n    ${initial}\n  </head>`)
 
   await writeFile(DIST, html, 'utf8')
   console.log(`[prerender] Injected ${data.repos.length} repos for ${data.date} into dist/index.html.`)

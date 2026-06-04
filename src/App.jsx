@@ -34,6 +34,23 @@ const PERIODS = [
   { key: 'monthly', tk: 'periodMonthly' },
 ]
 
+// Build-time daily feed injected into index.html by server/prerender.js (see the
+// #initial-daily <script>). Seeds React Query's cache so the live daily view
+// paints instantly on first visit instead of flashing a loading state over the
+// prerendered HTML. Read once at module load; null in dev or if prerender was
+// skipped (no Supabase env at build), in which case we just fall back to loading.
+const INITIAL_DAILY = (() => {
+  if (typeof document === 'undefined') return null
+  const el = document.getElementById('initial-daily')
+  if (!el) return null
+  try {
+    const { at, repos } = JSON.parse(el.textContent)
+    return Array.isArray(repos) && repos.length ? { at, repos } : null
+  } catch {
+    return null
+  }
+})()
+
 // Entry points to the rest of the site. The homepage is the highest-traffic /
 // highest-authority page, so these feed both the masthead nav (compact) and the
 // "Explore more" card grid (descriptive) — the only prominent links to repo
@@ -374,6 +391,8 @@ export default function App() {
 
   // Main feed. React Query caches per (period, language, date), so revisiting a
   // previously loaded view is instant and only refetches once data goes stale.
+  // The prerendered payload only covers the live daily / all-languages view.
+  const isLiveDaily = since === 'daily' && language === '' && !archiveDate
   const {
     data: repos = [],
     isLoading: loading,
@@ -386,6 +405,12 @@ export default function App() {
       archiveDate
         ? fetchHistory(archiveDate, since, language)
         : fetchTrending(since, language),
+    // Seed the live daily view from the build-time HTML payload. The build
+    // timestamp marks it stale, so React Query silently refetches the latest
+    // snapshot in the background — instant paint, no spinner, fresh data.
+    ...(isLiveDaily && INITIAL_DAILY
+      ? { initialData: INITIAL_DAILY.repos, initialDataUpdatedAt: INITIAL_DAILY.at }
+      : {}),
   })
 
   // Available archive dates for the current period/language.
