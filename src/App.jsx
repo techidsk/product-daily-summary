@@ -1,6 +1,17 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Star, GitFork, ShareNetwork, ArrowsClockwise } from '@phosphor-icons/react'
+import {
+  Star,
+  GitFork,
+  ShareNetwork,
+  ArrowsClockwise,
+  Stack,
+  Trophy,
+  GraduationCap,
+  RssSimple,
+  ArrowRight,
+  ArrowUpRight,
+} from '@phosphor-icons/react'
 import { fetchTrending, fetchHistory, fetchHistoryDates, fetchDayTop } from './api/trending.js'
 import { useI18n } from './i18n.jsx'
 import LanguageSwitcher from './components/LanguageSwitcher.jsx'
@@ -22,6 +33,83 @@ const PERIODS = [
   { key: 'weekly', tk: 'periodWeekly' },
   { key: 'monthly', tk: 'periodMonthly' },
 ]
+
+// Entry points to the rest of the site. The homepage is the highest-traffic /
+// highest-authority page, so these feed both the masthead nav (compact) and the
+// "Explore more" card grid (descriptive) — the only prominent links to repo
+// trajectory pages, the Hall of Fame and the RSS feed.
+const FEATURES = [
+  { href: '/repo', icon: Stack, label: 'navRepos', desc: 'reposDesc' },
+  { href: '/hall-of-fame', icon: Trophy, label: 'navHall', desc: 'hallDesc' },
+  { href: '/learn', icon: GraduationCap, label: 'navLearn', desc: 'learnDesc' },
+  { href: '/feed.xml', icon: RssSimple, label: 'rss', desc: 'rssDesc' },
+]
+
+// Compact horizontal nav for the masthead — icon + label + an arrow that slides
+// in on hover. Keeps the feature entries above the fold.
+function PrimaryNav() {
+  const { t } = useI18n()
+  return (
+    <nav className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-2">
+      {FEATURES.map(({ href, icon: Icon, label }) => (
+        <a
+          key={href}
+          href={href}
+          className="group inline-flex items-center gap-1.5 font-mono text-xs font-medium uppercase tracking-wider text-ink-soft transition hover:text-vermilion"
+        >
+          <Icon
+            size={15}
+            weight="bold"
+            className="text-vermilion/70 transition group-hover:text-vermilion"
+          />
+          {t(label)}
+          <ArrowRight
+            size={12}
+            weight="bold"
+            className="-translate-x-1 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100"
+          />
+        </a>
+      ))}
+    </nav>
+  )
+}
+
+// Descriptive card grid surfaced below the feed — the most visible invitation to
+// the rest of the site, one card per feature with a one-line description.
+function ExploreSection() {
+  const { t } = useI18n()
+  return (
+    <section className="mt-16 border-t border-line pt-10">
+      <h2 className="font-display text-2xl font-semibold tracking-tight text-ink">
+        {t('exploreHeading')}
+      </h2>
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {FEATURES.map(({ href, icon: Icon, label, desc }) => (
+          <a
+            key={href}
+            href={href}
+            className="group flex flex-col gap-3 rounded-sm border border-line bg-paper-2/40 p-5 transition hover:border-vermilion/40 hover:bg-paper-2/80"
+          >
+            <div className="flex items-center justify-between">
+              <Icon size={26} weight="duotone" className="text-vermilion" />
+              <ArrowUpRight
+                size={18}
+                weight="bold"
+                className="text-muted transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-vermilion"
+              />
+            </div>
+            <div>
+              <h3 className="font-display text-lg font-semibold tracking-tight text-ink">
+                {t(label)}
+              </h3>
+              <p className="mt-1 text-sm leading-relaxed text-ink-soft">{t(desc)}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  )
+}
 
 const LANGUAGES = [
   { value: '', label: 'allLanguages' },
@@ -354,6 +442,8 @@ export default function App() {
             <span>{dateline}</span>
             <span className="hidden sm:inline">{t('subtitle')}</span>
           </div>
+
+          <PrimaryNav />
         </header>
 
         {/* ───────────────── Body: feed + ad rail ───────────────── */}
@@ -461,6 +551,8 @@ export default function App() {
 
         <OnThisDay />
 
+        <ExploreSection />
+
         {/* ───────────────── Editorial content (SEO + readers) ───────────────── */}
         <section className="mt-16 grid gap-10 border-t border-line pt-10 md:grid-cols-2">
           <div>
@@ -493,9 +585,18 @@ export default function App() {
             <a href="/repo" className="transition hover:text-vermilion">
               {t('navRepos')}
             </a>
+            <a href="/hall-of-fame" className="transition hover:text-vermilion">
+              {t('navHall')}
+            </a>
             <a href="/learn" className="transition hover:text-vermilion">
               {t('navLearn')}
             </a>
+            <a href="/feed.xml" className="transition hover:text-vermilion">
+              {t('rss')}
+            </a>
+            <span aria-hidden className="text-line">
+              /
+            </span>
             <a href="/guide" className="transition hover:text-vermilion">
               {t('navGuide')}
             </a>
