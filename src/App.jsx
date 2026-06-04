@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   Star,
   GitFork,
@@ -398,6 +398,21 @@ export default function App() {
   useEffect(() => {
     setArchiveDate('')
   }, [since, language])
+
+  // Warm the cache for the other periods in the background once the current view
+  // has loaded, so the first tab switch within a fresh session is instant too
+  // (the live feeds are small and snapshots change only a few times a day).
+  const queryClient = useQueryClient()
+  useEffect(() => {
+    if (archiveDate) return // only prefetch the live feeds, not archived dates
+    for (const p of PERIODS) {
+      if (p.key === since) continue
+      queryClient.prefetchQuery({
+        queryKey: ['trending', p.key, language, ''],
+        queryFn: () => fetchTrending(p.key, language),
+      })
+    }
+  }, [since, language, archiveDate, queryClient])
 
   const dateline = new Date().toLocaleDateString(locale, {
     year: 'numeric',
