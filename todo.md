@@ -14,6 +14,7 @@
 - **首页异动快讯条**:排名上升 + 新入榜。
 - **On This Day**:首页回看一个月前 / 一年前的今天。
 - **RSS**:`server/gen-feed.js` → `/feed.xml`,每日摘要。
+- **数据库内容迁移**:`server/migrate-db.js` + `npm run db:migrate`,支持源库到目标库的幂等快照迁移。
 
 ---
 

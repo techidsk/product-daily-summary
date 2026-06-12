@@ -8,6 +8,7 @@
     "build": "vite build && node server/prerender.js && node server/gen-repo-pages.js && node server/gen-feed.js",
     "preview": "vite preview",
     "db:push": "node --env-file-if-exists=.env server/db-push.js",
+    "db:migrate": "node --env-file-if-exists=.env server/migrate-db.js",
     "ingest": "node --env-file-if-exists=.env server/ingest-all.js",
     "backfill": "node --env-file-if-exists=.env server/backfill.js"
   },
