@@ -6,11 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && node server/prerender.js && node server/gen-repo-pages.js && node server/gen-feed.js",
-    "preview": "vite preview",
+    "preview": "npm run build && wrangler dev",
     "db:push": "node --env-file-if-exists=.env server/db-push.js",
     "db:migrate": "node --env-file-if-exists=.env server/migrate-db.js",
     "ingest": "node --env-file-if-exists=.env server/ingest-all.js",
-    "backfill": "node --env-file-if-exists=.env server/backfill.js"
+    "backfill": "node --env-file-if-exists=.env server/backfill.js",
+    "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
     "@fontsource-variable/fraunces": "^5.2.9",
@@ -28,11 +29,12 @@
     "undici": "^7.26.0"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.40.2",
     "@tailwindcss/vite": "^4.3.0",
     "@vitejs/plugin-react": "^6.0.2",
     "cheerio": "^1.2.0",
     "tailwindcss": "^4.3.0",
     "vite": "^8.0.14",
-    "wrangler": "^4.95.0"
+    "wrangler": "^4.100.0"
   }
 }
